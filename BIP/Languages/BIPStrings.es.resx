@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="UnsupportedImageFormat_STR" xml:space="preserve">
+    <value>Formato de imagen no admitido!</value>
+  </data>
+	<data name="ImagePathTo_STR" xml:space="preserve">
+    <value>Ruta de imagen </value>
+  </data>
+	<data name="IsIncorrect_STR" xml:space="preserve">
+    <value> no es correcto!</value>
+  </data>
+	<data name="CanTCreate1BitPixelJPEGFile_STR" xml:space="preserve">
+    <value>No se puede crear el archivo JPEG de 1 bit/píxel!</value>
+  </data>
+	<data name="Histogram_STR" xml:space="preserve">
+    <value>Histograma</value>
+  </data>
+	<data name="Threshold_STR" xml:space="preserve">
+    <value>Umbral</value>
+  </data>
+	<data name="Extreme_STR" xml:space="preserve">
+    <value>Extreme</value>
+  </data>
+	<data name="NdExtreme_STR" xml:space="preserve">
+    <value>extreme 2</value>
+  </data>
+	<data name="MinRangeR_STR" xml:space="preserve">
+    <value>R: rango min </value>
+  </data>
+	<data name="MinRange_STR" xml:space="preserve">
+    <value>Gama de min</value>
+  </data>
+	<data name="UnsupportedFileFormat_STR" xml:space="preserve">
+    <value>¡Formato de archivo no compatible!</value>
+  </data>
+	<data name="CanTResizeBitmap_STR" xml:space="preserve">
+    <value>No se puede cambiar el tamaño de mapa de bits. </value>
+  </data>
+	<data name="UnsupportedPixelFormat_STR" xml:space="preserve">
+    <value>Formato de píxel no compatible!</value>
+  </data>
+	<data name="CanTSharpen1BitPerPixelImage_STR" xml:space="preserve">
+    <value>No se puede enfocar 1 bit por imagen!</value>
+  </data>
+	<data name="ZoomMustBeEqualOrLessThan1_STR" xml:space="preserve">
+    <value>Zoom debe ser igual o inferior a 1.</value>
+  </data>
+	<data name="CanTGenerateBitmap_STR" xml:space="preserve">
+    <value>No se puede generar el mapa de bits</value>
+  </data>
+	<data name="CanTSaveBitmapToStream_STR" xml:space="preserve">
+    <value>No se puede guardar el mapa de bits en secuencia</value>
+  </data>
+	<data name="CanTCreateBitmapFromPresentParameters_STR" xml:space="preserve">
+    <value>No se puede crear el mapa de bits de parámetros presentes!</value>
+  </data>
+	<data name="SourceDirectoryOrFileDoesnTExist_STR" xml:space="preserve">
+    <value>Archivo o directorio de origen no existe!</value>
+  </data>
+	<data name="InvalidParameterUsed_STR" xml:space="preserve">
+    <value>Utilizada un parámetro no válido!</value>
+  </data>
+	<data name="NoImageWasLoaded_STR" xml:space="preserve">
+    <value>No se cargó ninguna imagen!</value>
+  </data>
+	<data name="UnexpectedErrorOccured_STR" xml:space="preserve">
+    <value>Ha producido un error inesperado.</value>
+  </data>
+	<data name="ThereAreAlready2FingersLocated_STR" xml:space="preserve">
+    <value>Ya son 2 dedos situados!</value>
+  </data>
+	<data name="FingerRegionMustBeInsideImageClip_STR" xml:space="preserve">
+    <value>Región de dedo debe estar dentro de clip de imagen!</value>
+  </data>
+	<data name="FingerRegionSizeIsZero_STR" xml:space="preserve">
+    <value>Tamaño de la región de Finger es cero!</value>
+  </data>
+	<data name="ThereAreAlready2PagesInTheImage_STR" xml:space="preserve">
+    <value>Ya hay 2 páginas en la imagen!</value>
+  </data>
+	<data name="ConstructPagesFirst_STR" xml:space="preserve">
+    <value>Construir primero las páginas!</value>
+  </data>
+	<data name="CanTRemovePageFrom2PageImage_STR" xml:space="preserve">
+    <value>No se puede eliminar página de imagen de página 2!</value>
+  </data>
+	<data name="ThereIsOnly1PageInTheImage_STR" xml:space="preserve">
+    <value>Sólo hay 1 página de la imagen!</value>
+  </data>
+	<data name="MessageCode_STR" xml:space="preserve">
+    <value>Código de mensaje: </value>
+  </data>
+	<data name="CurveHasLessThan2Points_STR" xml:space="preserve">
+    <value>Curva tiene menos de 2 puntos!</value>
+  </data>
+	<data name="TiffImageWithJpegCompressionIsNotSupported_STR" xml:space="preserve">
+    <value>Imagen TIFF con compresión Jpeg no es compatible en GDI +!</value>
+  </data>
+	<data name="UnsupportedTiffCompression_STR" xml:space="preserve">
+    <value>Compresión Tiff no compatible!</value>
+  </data>
+	<data name="ThereIsNotSufficientMemoryToOpenFile_STR" xml:space="preserve">
+    <value>No hay memoria suficiente para abrir el archivo</value>
+  </data>
+	<data name="FromDisk_STR" xml:space="preserve">
+    <value>desde el disco</value>
+  </data>
+	<data name="ThereIsNotEnoughMemoryToOpenBitmapFromFile_STR" xml:space="preserve">
+    <value>No hay memoria suficiente para abrir el mapa de bits desde archivo</value>
+  </data>
+	<data name="ImageFileIsCorrupted_STR" xml:space="preserve">
+    <value>Archivo de imagen está dañado!</value>
+  </data>
+	<data name="CanTGetImagePropertiesFromFile_STR" xml:space="preserve">
+    <value>No se puede obtener las propiedades de archivo!</value>
+  </data>
+	<data name="ErrorInFile_STR" xml:space="preserve">
+    <value>Error en el archivo</value>
+  </data>
+	<data name="GIFFileIsCorrupted_STR" xml:space="preserve">
+    <value>Está dañado el archivo GIF!</value>
+  </data>
+	<data name="CanTFindIDATChunkTheFile_STR" xml:space="preserve">
+    <value>No se puede encontrar fragmentos de 'idat'! El archivo</value>
+  </data>
+	<data name="IsEitherCorruptedOrItIsNotPNGFile_STR" xml:space="preserve">
+    <value>está bien dañado o no es archivo PNG.!</value>
+  </data>
+	<data name="CanTOpenImage_STR" xml:space="preserve">
+    <value>No se puede abrir la imagen! </value>
+  </data>
+	<data name="CanTAnalyzeImage_STR" xml:space="preserve">
+    <value>No se puede analizar la imagen</value>
+  </data>
+	<data name="Resizing1ThereIsNotSufficientMemoryToResize_STR" xml:space="preserve">
+    <value>El tamaño 1: No hay memoria suficiente para cambiar el tamaño de archivo! Obligatorio:</value>
+  </data>
+	<data name="Resizing2ThereIsNotSufficientMemoryToResize_STR" xml:space="preserve">
+    <value>El tamaño 2: No hay memoria suficiente para cambiar el tamaño de archivo! Obligatorio: </value>
+  </data>
+	<data name="ResizeCanTAllocateBitmap_STR" xml:space="preserve">
+    <value>Tamaño: No se puede asignar el mapa de bits</value>
+  </data>
+	<data name="TotalAllocatedMemory_STR" xml:space="preserve">
+    <value>Total de memoria asignada:</value>
+  </data>
+	<data name="BitmapMustBeAtLeast2InchesWide_STR" xml:space="preserve">
+    <value>Mapa de bits debe ser al menos de 2 pulgadas de ancho.</value>
+  </data>
+</root>

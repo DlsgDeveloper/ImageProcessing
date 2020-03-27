@@ -1,0 +1,506 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{50AFC35D-21B2-4744-A3BC-DBB7234E410E}</ProjectGuid>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>BIP</AssemblyName>
+    <AssemblyOriginatorKeyFile>BIP.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ImageProcessing</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>false</SignAssembly>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>http://localhost/BIP/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\..\bin\Debug\BIP\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG;SHOW_MESSAGE, SAVE_RESULT</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\..\bin\Release\BIP\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Arithmetic.cs" />
+    <Compile Include="AutoLevelsOld.cs" />
+    <Compile Include="BitmapOperations\Exposure.cs" />
+    <Compile Include="BitmapOperations\BitmapFiller.cs" />
+    <Compile Include="Geometry\ImageCorners.cs" />
+    <Compile Include="Geometry\ImagePoint.cs" />
+    <Compile Include="Geometry\ImageRect.cs" />
+    <Compile Include="Geometry\ImageSize.cs" />
+    <Compile Include="Geometry\RatioClip.cs" />
+    <Compile Include="Geometry\RatioCorners.cs" />
+    <Compile Include="Geometry\Rotation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AutoLevels.cs" />
+    <Compile Include="BfPoint.cs" />
+    <Compile Include="BigImages\AudioZoning.cs" />
+    <Compile Include="BigImages\Binarization.cs" />
+    <Compile Include="BigImages\BinarizationDynamic.cs" />
+    <Compile Include="BigImages\ContentLocator.cs" />
+    <Compile Include="BigImages\Brightness.cs" />
+    <Compile Include="BigImages\Contrast.cs" />
+    <Compile Include="BigImages\BrightnessContrast.cs" />
+    <Compile Include="BigImages\AutoLevels.cs" />
+    <Compile Include="BigImages\BinarizationLoG.cs" />
+    <Compile Include="BigImages\CurveCorrection2.cs" />
+    <Compile Include="BigImages\CurveCorrectionAndRotationOld.cs" />
+    <Compile Include="BigImages\HistogramGrayscale.cs" />
+    <Compile Include="BigImages\DocumentLocator.cs" />
+    <Compile Include="BigImages\Merging.cs" />
+    <Compile Include="BigImages\Misc.cs" />
+    <Compile Include="BigImages\ResizingAndResampling.cs" />
+    <Compile Include="BigImages\RotationFlipping.cs" />
+    <Compile Include="BigImages\Sharpening.cs" />
+    <Compile Include="BitmapOperations\Insertor.cs" />
+    <Compile Include="BitmapOperations\ResizingDisproportional.cs" />
+    <Compile Include="ColorSubstitution.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IpSettings\Misc.cs" />
+    <Compile Include="Languages\BIPStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BIPStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Books\PagesSplitter.cs" />
+    <Compile Include="ColorD.cs" />
+    <Compile Include="Complex.cs" />
+    <Compile Include="ComplexMap.cs" />
+    <Compile Include="BackgroundRemoval.cs" />
+    <Compile Include="BlackBorderRemoval.cs" />
+    <Compile Include="ImageComponent\Extensions.cs" />
+    <Compile Include="ImageComponent\GenericAccessRights.cs" />
+    <Compile Include="ImageComponent\ImageDecoder.cs" />
+    <Compile Include="ImageComponent\ImageEncoder.cs" />
+    <Compile Include="ImageComponent\InteropServices\WinCodec.cs" />
+    <Compile Include="ImageComponent\InteropServices\WinCodecSdk.cs" />
+    <Compile Include="ImageComponent\InteropServices\GenericAccessRights.cs" />
+    <Compile Include="ImageComponent\InteropServices\PropVariant.cs" />
+    <Compile Include="ImageComponent\Metadata\ExifMetadata.cs" />
+    <Compile Include="ImageComponent\Metadata\ExifTags.cs" />
+    <Compile Include="ImageComponent\Metadata\MdProperties.cs" />
+    <Compile Include="ImageComponent\Misc.cs" />
+    <Compile Include="ManualLevels.cs" />
+    <Compile Include="Miscelaneous\BitmapMisc.cs" />
+    <Compile Include="Rasters\Borders\BorderPoint.cs" />
+    <Compile Include="Rasters\Borders\BorderPoints.cs" />
+    <Compile Include="Rasters\Borders\BorderSearchEngine.cs" />
+    <Compile Include="Rasters\Borders\ObjectBorder.cs" />
+    <Compile Include="Rasters\Corners\Corner.cs" />
+    <Compile Include="Rasters\Corners\ObjectCorners.cs" />
+    <Compile Include="Rasters\Corners\CornersSearchEngine.cs" />
+    <Compile Include="Rasters\Rasterizing\Rasterization.cs" />
+    <Compile Include="RotationFlipping.cs" />
+    <Compile Include="UnsharpMask.cs" />
+    <Compile Include="UnsharpMaskMatrix.cs" />
+    <Compile Include="Transforms\FourierTransform.cs" />
+    <Compile Include="Merging.cs" />
+    <Compile Include="Metadata\WICWrapper.cs" />
+    <Compile Include="Metadata\ExifMetadata.cs" />
+    <Compile Include="Metadata\MdProperties.cs" />
+    <Compile Include="Metadata\Metadata.cs" />
+    <Compile Include="Metadata\PngChunks.cs" />
+    <Compile Include="Metadata\S2NImageMetadata.cs" />
+    <Compile Include="Metadata\WICWrapper2.cs" />
+    <Compile Include="ObjectsRecognition\DocumentContent.cs" />
+    <Compile Include="Transactions.cs" />
+    <Compile Include="ColorPalettes\PaletteBuilder.cs" />
+    <Compile Include="BigImages\ThumbnailCreator.cs" />
+    <Compile Include="NoiseReduction.cs" />
+    <Compile Include="BigImages\Resizing.cs" />
+    <Compile Include="Binarization\BinorizationGraphics.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binarization\BinorizationProductionText.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binarization\BinorizationThreshold.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BookfoldCorrection2D.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConvexEnvelope.cs" />
+    <Compile Include="BrightnessContrast.cs" />
+    <Compile Include="AutoColor.cs" />
+    <Compile Include="BigImages\BinarizationThreshold.cs" />
+    <Compile Include="BigImages\CropAndDescew.cs" />
+    <Compile Include="BigImages\CurveCorrection.cs" />
+    <Compile Include="BigImages\CurveCorrectionAndRotation.cs" />
+    <Compile Include="BigImages\FingerRemoval.cs" />
+    <Compile Include="CropDescew\CdObject.cs" />
+    <Compile Include="BigImages\GhostLinesRemoval.cs" />
+    <Compile Include="BigImages\Histogram.cs" />
+    <Compile Include="BigImages\ImageCopier.cs" />
+    <Compile Include="BigImages\Resampling.cs" />
+    <Compile Include="BigImages\Rotation.cs" />
+    <Compile Include="CropDescew\Crop.cs" />
+    <Compile Include="CropDescew\Edge.cs" />
+    <Compile Include="FileFormat\Bmp.cs" />
+    <Compile Include="FileFormat\Giff.cs" />
+    <Compile Include="ImageFile\Exif.cs" />
+    <Compile Include="Geometry\InchPoint.cs" />
+    <Compile Include="Geometry\InchSize.cs" />
+    <Compile Include="FileFormat\IImageFormat.cs" />
+    <Compile Include="FileFormat\Jpeg.cs" />
+    <Compile Include="FileFormat\Png.cs" />
+    <Compile Include="FileFormat\Tiff.cs" />
+    <Compile Include="IpSettings\BfPoint.cs" />
+    <Compile Include="IpSettings\BfPoints.cs" />
+    <Compile Include="IpSettings\Clip.cs" />
+    <Compile Include="IpSettings\ClipInt.cs" />
+    <Compile Include="IpSettings\Curve.cs" />
+    <Compile Include="IpSettings\Finger.cs" />
+    <Compile Include="IpSettings\Fingers.cs" />
+    <Compile Include="BigImages\ItDecoder.cs" />
+    <Compile Include="BigImages\ItEncoder.cs" />
+    <Compile Include="IpSettings\ItImage.cs" />
+    <Compile Include="IpSettings\ItImages.cs" />
+    <Compile Include="IpSettings\ItImageSettings.cs" />
+    <Compile Include="IpSettings\ItPage.cs" />
+    <Compile Include="IpSettings\PageBookfold.cs" />
+    <Compile Include="ObjectsRecognition\ObjectLocator.cs" />
+    <Compile Include="PageObjects\PageObjects.cs" />
+    <Compile Include="PageObjects\SymbolShape.cs" />
+    <Compile Include="Geometry\InchRect.cs" />
+    <Compile Include="Geometry\RatioPoint.cs" />
+    <Compile Include="Geometry\RatioRect.cs" />
+    <Compile Include="Geometry\RatioSize.cs" />
+    <Compile Include="Stitching.cs" />
+    <Compile Include="ThumbnailCreator.cs" />
+    <Compile Include="HistogramSaturation.cs" />
+    <Compile Include="Hsv.cs" />
+    <Compile Include="Crop.cs" />
+    <Compile Include="Edge.cs" />
+    <Compile Include="Hsl.cs" />
+    <Compile Include="ImageFile\Bmp.cs" />
+    <Compile Include="ImageFile\Gif.cs" />
+    <Compile Include="ImageFile\ImageInfo.cs" />
+    <Compile Include="ImageFile\Jfif.cs" />
+    <Compile Include="ImageFile\Png.cs" />
+    <Compile Include="ImageFile\Tiff.cs" />
+    <Compile Include="ItImages.cs" />
+    <Compile Include="ItImageSettings.cs" />
+    <Compile Include="ObjectMap.cs" />
+    <Compile Include="ObjectByCorners.cs" />
+    <Compile Include="Operations.cs" />
+    <Compile Include="PageObjects\Zone.cs" />
+    <Compile Include="PageObjects\Zones.cs" />
+    <Compile Include="Resampling.cs" />
+    <Compile Include="Dilation.cs" />
+    <Compile Include="Erosion.cs" />
+    <Compile Include="PageBookfolding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Brightness.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Clip.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Clips.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ColorFullness.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ColorReplacement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Contrast.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ImageComparer.cs" />
+    <Compile Include="DocumentLocator.cs" />
+    <Compile Include="LightDistributor.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="Inverter.cs" />
+    <Compile Include="ImageCopier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CropAndDescew.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Curve.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CurveCorrection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CurveCorrectionAndRotation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binarization\DRS.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Binarization\DRS2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EdgeDetector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Encoding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Finger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FingerRemoval.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Fingers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GhostLinesRemoval.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ItImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ImagePreprocessing.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Interpolation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IpException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Line2D.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Misc.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiImageTiff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageContentLocator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\DelimiterZones.cs" />
+    <Compile Include="PageObjects\DelimiterZone.cs" />
+    <Compile Include="PageObjects\MiddleLine.cs" />
+    <Compile Include="PageObjects\ObjectShape.cs" />
+    <Compile Include="PageObjects\Pages.cs" />
+    <Compile Include="PageObjects\IPageObject.cs" />
+    <Compile Include="PageObjects\Page.cs" />
+    <Compile Include="PageObjects\Delimiter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Delimiters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Line.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Lines.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\ObjectLocator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Paragraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Paragraphs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Picture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Pictures.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Symbol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Symbols.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Word.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PageObjects\Words.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ItPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PagesLocator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PercentageBlack.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BfPoints.cs" />
+    <Compile Include="PostProcessing.cs" />
+    <Compile Include="Rasters\RasterProcessing.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RectangularRotation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Resizing.cs" />
+    <Compile Include="RIPMZoning.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rotation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RoughGradient.cs" />
+    <Compile Include="Smoothing.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Statistics.cs" />
+    <Compile Include="ThresholdOptional.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transforms\Fourier.cs" />
+    <None Include="BIP.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Languages\BIPStrings.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Languages\BIPStrings.fr.resx" />
+    <EmbeddedResource Include="Languages\BIPStrings.pt.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Languages\BIPStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>BIPStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
