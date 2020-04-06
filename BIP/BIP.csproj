@@ -118,8 +118,11 @@
     <Compile Include="AutoLevelsOld.cs" />
     <Compile Include="BitmapOperations\Exposure.cs" />
     <Compile Include="BitmapOperations\BitmapFiller.cs" />
+    <Compile Include="Geometry\ImageClip.cs" />
+    <Compile Include="Geometry\ImageCornersD.cs" />
     <Compile Include="Geometry\ImageCorners.cs" />
     <Compile Include="Geometry\ImagePoint.cs" />
+    <Compile Include="Geometry\ImagePointD.cs" />
     <Compile Include="Geometry\ImageRect.cs" />
     <Compile Include="Geometry\ImageSize.cs" />
     <Compile Include="Geometry\RatioClip.cs" />

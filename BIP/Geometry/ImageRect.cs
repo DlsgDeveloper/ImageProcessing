@@ -227,6 +227,11 @@ namespace BIP.Geometry
 		{
 			return !(this.X > p.X || this.Y > p.Y || this.Right < p.X || this.Bottom < p.Y);
 		}
+
+		public bool Contains(ImagePointD p)
+		{
+			return !(this.X > p.X || this.Y > p.Y || this.Right < p.X || this.Bottom < p.Y);
+		}
 		#endregion
 
 		#region FromLTRB()

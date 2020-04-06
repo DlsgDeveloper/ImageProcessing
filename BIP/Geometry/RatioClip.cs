@@ -247,12 +247,12 @@ namespace BIP.Geometry
 		#endregion
 
 		#region GetImageCorners()
-		public ImageCorners GetImageCorners(double bitmapW, double bitmapH)
+		public ImageCornersD GetImageCorners(double bitmapW, double bitmapH)
 		{
 			double centerX = (_clip.X + _clip.Width / 2.0) * bitmapW;
 			double centerY = (_clip.Y + _clip.Height / 2.0) * bitmapH;
 
-			return new ImageCorners(
+			return new ImageCornersD(
 				Rotation.RotatePoint(_clip.X * bitmapW, _clip.Y * bitmapH, centerX, centerY, this.Skew),
 				Rotation.RotatePoint(_clip.Right * bitmapW, _clip.Y * bitmapH, centerX, centerY, this.Skew),
 				Rotation.RotatePoint(_clip.X * bitmapW, _clip.Bottom * bitmapH, centerX, centerY, this.Skew),
@@ -264,7 +264,7 @@ namespace BIP.Geometry
 		#region GetRatioCorners()
 		public RatioCorners GetRatioCorners(double bitmapW, double bitmapH)
 		{
-			ImageCorners imageCorners = GetImageCorners(bitmapW, bitmapH);
+			ImageCornersD imageCorners = GetImageCorners(bitmapW, bitmapH);
 
 			return new RatioCorners(
 				new RatioPoint(imageCorners.Pul.X / bitmapW, imageCorners.Pul.Y / bitmapH),
@@ -273,8 +273,6 @@ namespace BIP.Geometry
 				new RatioPoint(imageCorners.Plr.X / bitmapW, imageCorners.Plr.Y / bitmapH)
 				);
 		}
-
-
 		#endregion
 
 		#region ToString()

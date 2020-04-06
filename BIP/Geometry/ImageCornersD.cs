@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace BIP.Geometry
 {
-	public class ImageCorners
+	public class ImageCornersD
 	{
-		ImagePoint _pul, _pur, _pll, _plr;
+		ImagePointD _pul, _pur, _pll, _plr;
 
-		public ImagePoint Pul { get { return _pul; } }
-		public ImagePoint Pur { get { return _pur; } }
-		public ImagePoint Pll { get { return _pll; } }
-		public ImagePoint Plr { get { return _plr; } }
+		public ImagePointD Pul { get { return _pul; } }
+		public ImagePointD Pur { get { return _pur; } }
+		public ImagePointD Pll { get { return _pll; } }
+		public ImagePointD Plr { get { return _plr; } }
 
 
 		#region constructor
-		public ImageCorners(ImagePoint pUL, ImagePoint pUR, ImagePoint pLL, ImagePoint pLR)
+		public ImageCornersD(ImagePointD pUL, ImagePointD pUR, ImagePointD pLL, ImagePointD pLR)
 		{
 			_pul = pUL;
 			_pur = pUR;
@@ -25,12 +25,12 @@ namespace BIP.Geometry
 			_plr = pLR;
 		}
 
-		public ImageCorners(System.Drawing.Point pUL, System.Drawing.Point pUR, System.Drawing.Point pLL, System.Drawing.Point pLR)
+		public ImageCornersD(System.Drawing.Point pUL, System.Drawing.Point pUR, System.Drawing.Point pLL, System.Drawing.Point pLR)
 		{
-			_pul = new ImagePoint(pUL.X, pUL.Y);
-			_pur = new ImagePoint(pUR.X, pUR.Y);
-			_pll = new ImagePoint(pLL.X, pLL.Y);
-			_plr = new ImagePoint(pLR.X, pLR.Y);
+			_pul = new ImagePointD(pUL.X, pUL.Y);
+			_pur = new ImagePointD(pUR.X, pUR.Y);
+			_pll = new ImagePointD(pLL.X, pLL.Y);
+			_plr = new ImagePointD(pLR.X, pLR.Y);
 		}
 		#endregion
 
@@ -71,7 +71,7 @@ namespace BIP.Geometry
 			}
 		}
 
-		public ImagePoint CenterPoint
+		public ImagePointD CenterPoint
 		{
 			get
 			{
@@ -80,7 +80,7 @@ namespace BIP.Geometry
 				double y = Math.Min(Math.Min(this.Pul.Y, this.Pur.Y), Math.Min(this.Pll.Y, this.Plr.Y));
 				double b = Math.Max(Math.Max(this.Pul.Y, this.Pur.Y), Math.Max(this.Pll.Y, this.Plr.Y));
 
-				return new ImagePoint(Convert.ToInt32((x + r) / 2.0), Convert.ToInt32((y + b) / 2.0));
+				return new ImagePointD(Convert.ToInt32((x + r) / 2.0), Convert.ToInt32((y + b) / 2.0));
 			}
 		}
 
@@ -112,10 +112,10 @@ namespace BIP.Geometry
 		public void Rotate(double centerX, double centerY, double angle)
 		{
 
-			_pul = Rotation.RotatePoint(_pul, centerX, centerY, angle);
-			_pur = Rotation.RotatePoint(_pur, centerX, centerY, angle);
-			_pll = Rotation.RotatePoint(_pll, centerX, centerY, angle);
-			_plr = Rotation.RotatePoint(_plr, centerX, centerY, angle);
+			_pul = Rotation.RotatePoint(_pul.X, _pul.Y, centerX, centerY, angle);
+			_pur = Rotation.RotatePoint(_pur.X, _pur.Y, centerX, centerY, angle);
+			_pll = Rotation.RotatePoint(_pll.X, _pll.Y, centerX, centerY, angle);
+			_plr = Rotation.RotatePoint(_plr.X, _plr.Y, centerX, centerY, angle);
 		}
 		#endregion
 
@@ -126,11 +126,11 @@ namespace BIP.Geometry
 
 			if (angle != 0)
 			{
-				ImagePoint center = this.CenterPoint;
+				ImagePointD center = this.CenterPoint;
 
-				ImagePoint pUL = Rotation.RotatePoint(_pul, center, -angle);
-				ImagePoint pUR = Rotation.RotatePoint(_pur, center, -angle);
-				ImagePoint pLL = Rotation.RotatePoint(_pll, center, -angle);
+				ImagePointD pUL = Rotation.RotatePoint(_pul, center, -angle);
+				ImagePointD pUR = Rotation.RotatePoint(_pur, center, -angle);
+				ImagePointD pLL = Rotation.RotatePoint(_pll, center, -angle);
 
 				ImageClip c = new ImageClip(pUL.X, pUL.Y, (pUR.X - pUL.X), (pLL.Y - pUL.Y), this.Angle);
 
@@ -144,7 +144,7 @@ namespace BIP.Geometry
 			}
 		}
 		#endregion
-
+		
 		#region GetRatioClip()
 		public RatioClip GetRatioClip(double bitmapW, double bitmapH)
 		{
@@ -152,11 +152,11 @@ namespace BIP.Geometry
 
 			if (angle != 0)
 			{
-				ImagePoint center = this.CenterPoint;
+				ImagePointD center = this.CenterPoint;
 
-				ImagePoint pUL = Rotation.RotatePoint(_pul, center, -angle);
-				ImagePoint pUR = Rotation.RotatePoint(_pur, center, -angle);
-				ImagePoint pLL = Rotation.RotatePoint(_pll, center, -angle);
+				ImagePointD pUL = Rotation.RotatePoint(_pul, center, -angle);
+				ImagePointD pUR = Rotation.RotatePoint(_pur, center, -angle);
+				ImagePointD pLL = Rotation.RotatePoint(_pll, center, -angle);
 
 				RatioClip c = new RatioClip(pUL.X / bitmapW, pUL.Y / bitmapH, (pUR.X - pUL.X) / bitmapW, (pLL.Y - pUL.Y) / bitmapH, this.Angle);
 
