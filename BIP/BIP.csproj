@@ -118,6 +118,10 @@
     <Compile Include="AutoLevelsOld.cs" />
     <Compile Include="BitmapOperations\Exposure.cs" />
     <Compile Include="BitmapOperations\BitmapFiller.cs" />
+    <Compile Include="Books\LinearRegression.cs" />
+    <Compile Include="Books\PagesSplitterLinearRegression.cs" />
+    <Compile Include="Books\RegressionPoint.cs" />
+    <Compile Include="Books\SplitterLine.cs" />
     <Compile Include="Geometry\ImageClip.cs" />
     <Compile Include="Geometry\ImageCornersD.cs" />
     <Compile Include="Geometry\ImageCorners.cs" />

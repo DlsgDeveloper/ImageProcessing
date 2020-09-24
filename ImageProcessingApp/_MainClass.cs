@@ -73,7 +73,7 @@ namespace ImageProcessingApp
 			try
 			{
 				//ImageProcessingApp.BitmapOperations.BitmapFiller.Go();
-				ImageProcessingApp.BrightnessContrastTest.Test();
+				ImageProcessingApp.Books.PagesSplitterLinearRegressionTest.Test();
 			}
 			catch (Exception ex)
 			{

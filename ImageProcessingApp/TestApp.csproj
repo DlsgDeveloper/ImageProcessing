@@ -124,6 +124,7 @@
     <Compile Include="BitmapOperations\Resampling.cs" />
     <Compile Include="BitmapOperations\ResizingDisproportional.cs" />
     <Compile Include="BitmapsWithReverseBits.cs" />
+    <Compile Include="Books\PagesSplitterLinearRegressionTest.cs" />
     <Compile Include="BrightnessContrastTest.cs" />
     <Compile Include="EdgeDetection.cs" />
     <Compile Include="ImageFile\ImageInfoTester.cs" />
