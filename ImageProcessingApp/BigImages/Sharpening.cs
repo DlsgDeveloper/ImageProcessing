@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ImageProcessingApp.BigImages
+namespace TestApp.BigImages
 {
 	class Sharpening
 	{

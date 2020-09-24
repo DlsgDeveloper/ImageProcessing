@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ImageProcessingApp
+namespace TestApp
 {
 	class Line2D
 	{

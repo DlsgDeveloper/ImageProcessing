@@ -1,4 +1,13 @@
-m.vs/ImageProcessing/v15/Server/sqlite3
+m.vs
+r.vs/ImageProcessing/v15/Server/sqlite3
+r.vs/ImageProcessing/v15/sqlite3
 mBIP
+mBIP/BigImages
+mBIP/ColorPalettes
+mBIP/Geometry
+mBIP/ImageFile
+mBIP/IpSettings
+rBIP/Languages
+mBIP/ObjectsRecognition
 mBIP/Properties
 mImageProcessingApp

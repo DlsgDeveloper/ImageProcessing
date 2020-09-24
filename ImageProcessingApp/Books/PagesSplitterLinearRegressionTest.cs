@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageProcessingApp.Books
+namespace TestApp.Books
 {
 	class PagesSplitterLinearRegressionTest
 	{
@@ -28,7 +28,7 @@ namespace ImageProcessingApp.Books
 
 			linearRegression.GetSplitterLine(100, 100);
 			*/
-			DirectoryInfo dir = new DirectoryInfo(@"C:\Users\Jirka.Stybnar.IA-CORP\testRun\PagesSplitter");
+			DirectoryInfo dir = new DirectoryInfo(Path.Combine(TestApp.Misc.TestRunDir.FullName, @"PagesSplitter"));
 			DirectoryInfo resultDir = new DirectoryInfo(dir.FullName + @"\result");
 			List<FileInfo> files = dir.GetFiles("*.*").ToList();
 
@@ -38,14 +38,14 @@ namespace ImageProcessingApp.Books
 
 			foreach(FileInfo file in files)
 			{
-				//if (file.Name == "0005.jpg")
+				if (file.Name == "KIC Document 18.jpg")
 				{
 					using (Bitmap bitmap = new Bitmap(file.FullName))
 					{
 						int dpi = Convert.ToInt32(bitmap.HorizontalResolution);
 
 						DateTime start = DateTime.Now;
-						BIP.Books.SplitterLine line = splitter.FindBookfoldLine(bitmap, new Rectangle(bitmap.Width / 2 - 3 * dpi, 0, 6 * dpi, bitmap.Height), 10, 10, 0);
+						BIP.Books.SplitterLine line = splitter.FindBookfoldLine(bitmap, new Rectangle(bitmap.Width / 2 - 3 * dpi, dpi / 2, 6 * dpi, bitmap.Height - dpi), 10, 10, 0);
 						Console.WriteLine(string.Format("File: {0}, Time: {1}, Result: {2}", file.Name, DateTime.Now.Subtract(start), line));
 
 						splitter.DrawResult(bitmap, line);

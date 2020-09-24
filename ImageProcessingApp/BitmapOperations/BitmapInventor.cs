@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 
-namespace ImageProcessingApp.BitmapOperations
+namespace TestApp.BitmapOperations
 {
 	public static class BitmapInventor
 	{

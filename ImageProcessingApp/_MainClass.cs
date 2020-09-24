@@ -12,10 +12,10 @@ using System.Windows.Forms;
 using ImageProcessing;
 using ImageProcessing.PageObjects;
 using BIP.Geometry;
-using ImageProcessingApp.ImageFile;
+using TestApp.ImageFile;
 using System.Reflection;
 
-namespace ImageProcessingApp
+namespace TestApp
 {
 	/// <summary>
 	/// Summary description for Class1.
@@ -72,8 +72,8 @@ namespace ImageProcessingApp
 			
 			try
 			{
-				//ImageProcessingApp.BitmapOperations.BitmapFiller.Go();
-				ImageProcessingApp.Books.PagesSplitterLinearRegressionTest.Test();
+				//TestApp.BitmapOperations.BitmapFiller.Go();
+				TestApp.Books.PagesSplitterLinearRegressionTest.Test();
 			}
 			catch (Exception ex)
 			{

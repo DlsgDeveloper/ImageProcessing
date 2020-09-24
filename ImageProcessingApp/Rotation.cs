@@ -7,7 +7,7 @@ using System.Drawing.Imaging;
 using ImageProcessing;
 using System.IO;
 
-namespace ImageProcessingApp
+namespace TestApp
 {
 	class Rotation
 	{

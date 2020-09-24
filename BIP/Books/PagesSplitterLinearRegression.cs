@@ -47,8 +47,19 @@ namespace BIP.Books
 
 			LinearRegression linearRegression = new LinearRegression(regressionPoints);
 
+#if DEBUG
+			DrawPoints(bitmap, regressionPoints, 255, 0, 0);
+#endif
+
 			linearRegression.DeletePointsFurtherThan(100);
+#if DEBUG
+			DrawPoints(bitmap, regressionPoints, 0, 255, 0);
+#endif
 			linearRegression.DeletePointsFurtherThan(20);
+
+#if DEBUG
+			DrawPoints(bitmap, regressionPoints, 0, 0, 255);
+#endif
 
 			return linearRegression.GetSplitterLine(bitmap.Width, bitmap.Height);
 		}
@@ -129,6 +140,88 @@ namespace BIP.Books
 								pSource[y * stride + x] = (byte)(entries.Length - 1);
 
 							xCurrent += xMove;
+						}
+					}
+				}
+				#endregion
+
+				#region 1 bpp
+				/*else if (bitmap.PixelFormat == PixelFormat.Format1bppIndexed)
+				{
+					for (y = 0; y < sourceH; y++)
+					{
+						if ((y % 2) == 0)
+						{
+							pSource[y * stride + splitBasedOnVerticalDifferencesL / 8] &= 195;
+							pSource[y * stride + splitBasedOnVerticalDifferencesL / 8] |= 36;
+
+							pSource[y * stride + splitBasedOnVerticalDifferencesR / 8] &= 195;
+							pSource[y * stride + splitBasedOnVerticalDifferencesR / 8] |= 36;
+						}
+
+						pSource[y * stride + splitBasedOnVerticalDifferences / 8] &= 195;
+						pSource[y * stride + splitBasedOnVerticalDifferences / 8] |= 36;
+					}
+				}*/
+				#endregion
+
+			}
+			finally
+			{
+				if ((bitmap != null) && (bitmapData != null))
+					bitmap.UnlockBits(bitmapData);
+			}
+		}
+		#endregion
+
+		#region DrawPoints()
+		public unsafe void DrawPoints(Bitmap bitmap, List<RegressionPoint> regressionPoints, byte r, byte g, byte b)
+		{
+			BitmapData bitmapData = null;
+
+			int sourceW = bitmap.Width;
+			int sourceH = bitmap.Height;
+
+			int x, y;
+
+			try
+			{
+				bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+				int stride = bitmapData.Stride;
+				byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+
+				#region 24 or 32 bpp
+				if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb || bitmap.PixelFormat == PixelFormat.Format24bppRgb)
+				{
+					int pixelBytes = (bitmap.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
+
+					foreach (RegressionPoint p in regressionPoints)
+					{
+						for (y = Math.Max(p.Y - 1, 0); y <= Math.Min(sourceH - 1, p.Y + 1); y++)
+						{
+							for (x = Math.Max(0, p.X - 1); x <= Math.Min(sourceW, p.X + 1); x++)
+							{
+									pSource[y * stride + x * pixelBytes + 0] = b;
+									pSource[y * stride + x * pixelBytes + 1] = g;
+									pSource[y * stride + x * pixelBytes + 2] = r;
+							}
+						}
+					}
+				}
+				#endregion
+
+				#region 8 bpp
+				else if (bitmap.PixelFormat == PixelFormat.Format8bppIndexed)
+				{
+					foreach (RegressionPoint p in regressionPoints)
+					{
+						for (y = Math.Max(p.Y - 1, 0); y <= Math.Min(sourceH - 1, p.Y + 1); y++)
+						{
+							for (x = Math.Max(0, p.X - 1); x <= Math.Min(sourceW, p.X + 1); x++)
+							{
+								pSource[y * stride + x] = g;
+							}
 						}
 					}
 				}
