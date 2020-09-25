@@ -77,87 +77,12 @@ namespace BIP.Books
 				int splitBasedOnVerticalDifferencesL = Convert.ToInt32(clip.X + (minVerticalIndexL * pixelsPerStripe) + (pixelsPerStripe / 2.0));
 				int splitBasedOnVerticalDifferencesR = Convert.ToInt32(clip.X + (minVerticalIndexR * pixelsPerStripe) + (pixelsPerStripe / 2.0));
 
-#if DEBUG
-				DrawResult(file, itDecoder, splitBasedOnVerticalDifferences, splitBasedOnVerticalDifferencesL, splitBasedOnVerticalDifferencesR);
-#endif
-
 				splitterL = splitBasedOnVerticalDifferencesL;
 				splitterR = splitBasedOnVerticalDifferencesR;
 				//splitter = (splitBasedOnVerticalDifferencesL + splitBasedOnVerticalDifferencesR) / 2;
 
 				double median = GetMedian(verticalDifferencesTop10Percent);
 				double confidence = Math.Abs(verticalDifferencesTop10Percent[minVerticalIndex] / median) ;
-				return 1 - confidence;
-			}
-		}
-		#endregion
-
-		#region FindPagesSplitter2()
-		/// <summary>
-		/// </summary>
-		/// <param name="file"></param>
-		/// <param name="splitterL">in pixels, left side of the middle part</param>
-		/// <param name="splitterR">in pixels, right side of the middle part</param>
-		/// <returns></returns>
-		public double FindPagesSplitter2(FileInfo file, out int splitterL, out int splitterR)
-		{
-			int[,] verticalDifferences;
-
-			using (ItDecoder itDecoder = new ItDecoder(file.FullName))
-			{
-				splitterL = (int)(itDecoder.Width / 2 - itDecoder.DpiX * 0.5);
-				splitterR = (int)(itDecoder.Width / 2 + itDecoder.DpiX * 0.5);
-
-				//width/height ratio must be <1.2, 1.8>
-				if ((itDecoder.Width < itDecoder.Height * 1.2) || (itDecoder.Width > itDecoder.Height * 1.9))
-					return 0;
-				//book size must be at least 9" x 7"
-				if ((itDecoder.Width / (double)itDecoder.DpiX < 9) || (itDecoder.Height / (double)itDecoder.DpiY < 7))
-					return 0;
-
-				int sourceW = itDecoder.Width;
-				int sourceH = itDecoder.Height;
-
-				int		dpiX = itDecoder.DpiX;
-				int		dpiY = itDecoder.DpiY;
-				int		pixelsPerStripe = dpiX / 10;
-
-				int			clipWidth = (int)Math.Max(sourceW * 0.1, 3 * dpiX);
-				Rectangle	clip = Rectangle.FromLTRB((int)Math.Max(0, (sourceW / 2) - clipWidth / 2), 0, (int)Math.Min(sourceW, (sourceW / 2) + clipWidth / 2), sourceH);
-				clip.Width = (clip.Width / pixelsPerStripe) * pixelsPerStripe;
-
-				using (Bitmap bitmap = itDecoder.GetClip(clip))
-				{
-					verticalDifferences = GetVerticalDifferences2(bitmap, pixelsPerStripe);
-				}
-
-				double[]	verticalDifferencesTop10Percent = GetAverageVerticalDifferenceOfTopXPercent(itDecoder.PixelsFormat, verticalDifferences, 10);				
-				bool[]		possibleBookfoldValues = GetPossibleBookfoldArray(verticalDifferencesTop10Percent);
-				int			minVerticalIndex, minVerticalIndexL, minVerticalIndexR;
-
-/*#if DEBUG
-				Console.WriteLine();
-				Console.WriteLine(file.Name);
-
-				for (int i = 0; i < verticalDifferencesTop10Percent.Length; i++)
-					Console.WriteLine(verticalDifferencesTop10Percent[i]);
-#endif*/
-
-				GetRange(verticalDifferencesTop10Percent, possibleBookfoldValues, out minVerticalIndex, out minVerticalIndexL, out minVerticalIndexR, 1.5);
-
-				int splitBasedOnVerticalDifferences = Convert.ToInt32(clip.X + (minVerticalIndex * pixelsPerStripe) + (pixelsPerStripe / 2.0));
-				int splitBasedOnVerticalDifferencesL = Convert.ToInt32(clip.X + (minVerticalIndexL * pixelsPerStripe) + (pixelsPerStripe / 2.0));
-				int splitBasedOnVerticalDifferencesR = Convert.ToInt32(clip.X + (minVerticalIndexR * pixelsPerStripe) + (pixelsPerStripe / 2.0));
-
-#if DEBUG
-				DrawResult(file, itDecoder, splitBasedOnVerticalDifferences, splitBasedOnVerticalDifferencesL, splitBasedOnVerticalDifferencesR);
-#endif
-
-				splitterL = splitBasedOnVerticalDifferencesL;
-				splitterR = splitBasedOnVerticalDifferencesR;
-
-				double median = GetMedian(verticalDifferencesTop10Percent);
-				double confidence = Math.Abs(verticalDifferencesTop10Percent[minVerticalIndex] / median);
 				return 1 - confidence;
 			}
 		}
@@ -229,6 +154,73 @@ namespace BIP.Books
 		}
 		#endregion
 	
+		#region FindPagesSplitter2()
+		/// <summary>
+		/// </summary>
+		/// <param name="file"></param>
+		/// <param name="splitterL">in pixels, left side of the middle part</param>
+		/// <param name="splitterR">in pixels, right side of the middle part</param>
+		/// <returns></returns>
+		public double FindPagesSplitter2(FileInfo file, out int splitterL, out int splitterR)
+		{
+			int[,] verticalDifferences;
+
+			using (ItDecoder itDecoder = new ItDecoder(file.FullName))
+			{
+				splitterL = (int)(itDecoder.Width / 2 - itDecoder.DpiX * 0.5);
+				splitterR = (int)(itDecoder.Width / 2 + itDecoder.DpiX * 0.5);
+
+				//width/height ratio must be <1.2, 1.8>
+				if ((itDecoder.Width < itDecoder.Height * 1.2) || (itDecoder.Width > itDecoder.Height * 1.9))
+					return 0;
+				//book size must be at least 9" x 7"
+				if ((itDecoder.Width / (double)itDecoder.DpiX < 9) || (itDecoder.Height / (double)itDecoder.DpiY < 7))
+					return 0;
+
+				int sourceW = itDecoder.Width;
+				int sourceH = itDecoder.Height;
+
+				int		dpiX = itDecoder.DpiX;
+				int		dpiY = itDecoder.DpiY;
+				int		pixelsPerStripe = dpiX / 10;
+
+				int			clipWidth = (int)Math.Max(sourceW * 0.1, 3 * dpiX);
+				Rectangle	clip = Rectangle.FromLTRB((int)Math.Max(0, (sourceW / 2) - clipWidth / 2), 0, (int)Math.Min(sourceW, (sourceW / 2) + clipWidth / 2), sourceH);
+				clip.Width = (clip.Width / pixelsPerStripe) * pixelsPerStripe;
+
+				using (Bitmap bitmap = itDecoder.GetClip(clip))
+				{
+					verticalDifferences = GetVerticalDifferences2(bitmap, pixelsPerStripe);
+				}
+
+				double[]	verticalDifferencesTop10Percent = GetAverageVerticalDifferenceOfTopXPercent(itDecoder.PixelsFormat, verticalDifferences, 10);				
+				bool[]		possibleBookfoldValues = GetPossibleBookfoldArray(verticalDifferencesTop10Percent);
+				int			minVerticalIndex, minVerticalIndexL, minVerticalIndexR;
+
+/*#if DEBUG
+				Console.WriteLine();
+				Console.WriteLine(file.Name);
+
+				for (int i = 0; i < verticalDifferencesTop10Percent.Length; i++)
+					Console.WriteLine(verticalDifferencesTop10Percent[i]);
+#endif*/
+
+				GetRange(verticalDifferencesTop10Percent, possibleBookfoldValues, out minVerticalIndex, out minVerticalIndexL, out minVerticalIndexR, 1.5);
+
+				int splitBasedOnVerticalDifferences = Convert.ToInt32(clip.X + (minVerticalIndex * pixelsPerStripe) + (pixelsPerStripe / 2.0));
+				int splitBasedOnVerticalDifferencesL = Convert.ToInt32(clip.X + (minVerticalIndexL * pixelsPerStripe) + (pixelsPerStripe / 2.0));
+				int splitBasedOnVerticalDifferencesR = Convert.ToInt32(clip.X + (minVerticalIndexR * pixelsPerStripe) + (pixelsPerStripe / 2.0));
+
+				splitterL = splitBasedOnVerticalDifferencesL;
+				splitterR = splitBasedOnVerticalDifferencesR;
+
+				double median = GetMedian(verticalDifferencesTop10Percent);
+				double confidence = Math.Abs(verticalDifferencesTop10Percent[minVerticalIndex] / median);
+				return 1 - confidence;
+			}
+		}
+		#endregion
+
 		#region static FindPagesSplitterStatic()
 		/// <summary>
 		/// It finds the middle part of the book and returns the confidence. It works on 4" wide strip in the middle of the image. It creates 10 strips
@@ -283,11 +275,118 @@ namespace BIP.Books
 		}
 		#endregion
 
+		#region DrawResult()
+		public static unsafe void DrawResult(Bitmap bitmap, int splitL, int splitR)
+		{
+			BitmapData bitmapData = null;
+
+			int sourceW = bitmap.Width;
+			int sourceH = bitmap.Height;
+
+			int dpiX = Convert.ToInt32(bitmap.HorizontalResolution);
+			int dpiY = Convert.ToInt32(bitmap.VerticalResolution);
+
+			int y;
+
+			try
+			{
+				bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+				int stride = bitmapData.Stride;
+				byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+
+				#region 32 bpp
+				if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb || bitmap.PixelFormat == PixelFormat.Format24bppRgb)
+				{
+					int pixelBytes = (bitmap.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
+
+					for (y = 0; y < sourceH; y++)
+					{
+						if ((y % 2) == 0)
+						{
+							pSource[y * stride + splitL * pixelBytes + 0] = 0;
+							pSource[y * stride + splitL * pixelBytes + 1] = 0;
+							pSource[y * stride + splitL * pixelBytes + 2] = 255;
+
+							pSource[y * stride + splitR * pixelBytes + 0] = 0;
+							pSource[y * stride + splitR * pixelBytes + 1] = 255;
+							pSource[y * stride + splitR * pixelBytes + 2] = 0;
+						}
+					}
+				}
+				#endregion
+
+				#region 8 bpp
+				else if (bitmap.PixelFormat == PixelFormat.Format8bppIndexed)
+				{
+					if (ImageProcessing.Misc.IsGrayscale(bitmap))
+					{
+						for (y = 0; y < sourceH; y++)
+						{
+							if ((y % 2) == 0)
+							{
+								pSource[y * stride + splitL - 1] = 255;
+								pSource[y * stride + splitL] = 128;
+								pSource[y * stride + splitL + 1] = 255;
+
+								pSource[y * stride + splitR - 1] = 255;
+								pSource[y * stride + splitR] = 128;
+								pSource[y * stride + splitR + 1] = 255;
+							}
+						}
+					}
+					else
+					{
+						Color[] entries = bitmap.Palette.Entries;
+
+						for (y = 0; y < sourceH; y++)
+						{
+							if ((y % 2) == 0)
+							{
+								pSource[y * stride + splitL - 1] = (byte)(entries.Length - 1);
+								pSource[y * stride + splitL] = 128;
+								pSource[y * stride + splitL + 1] = (byte)(entries.Length - 1);
+
+								pSource[y * stride + splitR - 1] = (byte)(entries.Length - 1);
+								pSource[y * stride + splitR] = 128;
+								pSource[y * stride + splitR + 1] = (byte)(entries.Length - 1);
+							}
+						}
+					}
+				}
+				#endregion
+
+				#region 1 bpp
+				else if (bitmap.PixelFormat == PixelFormat.Format1bppIndexed)
+				{
+					for (y = 0; y < sourceH; y++)
+					{
+						if ((y % 2) == 0)
+						{
+							pSource[y * stride + splitL / 8] &= 195;
+							pSource[y * stride + splitL / 8] |= 36;
+
+							pSource[y * stride + splitR / 8] &= 195;
+							pSource[y * stride + splitR / 8] |= 36;
+						}
+					}
+				}
+				#endregion
+
+			}
+			finally
+			{
+				if ((bitmap != null) && (bitmapData != null))
+					bitmap.UnlockBits(bitmapData);
+			}
+		}
+		#endregion
+		
 		#endregion
 
 		// PRIVATE METHODS
 		#region private methods
-	
+
 		#region GetColumnsColors()
 		unsafe int[,] GetColumnsGrayShades(Bitmap bitmap, int pixelsPerStripe)
 		{
@@ -792,134 +891,6 @@ namespace BIP.Books
 		}
 		#endregion
 
-		#region DrawResult()
-		unsafe void DrawResult(FileInfo source, ItDecoder itDecoder, int splitBasedOnVerticalDifferences, int splitBasedOnVerticalDifferencesL, int splitBasedOnVerticalDifferencesR)
-		{
-			using (Bitmap bitmap = itDecoder.GetImage())
-			{
-				BitmapData bitmapData = null;
-
-				int sourceW = bitmap.Width;
-				int sourceH = bitmap.Height;
-
-				int dpiX = Convert.ToInt32(bitmap.HorizontalResolution);
-				int dpiY = Convert.ToInt32(bitmap.VerticalResolution);
-
-				int y;
-
-				try
-				{
-					bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-
-					int		stride = bitmapData.Stride;
-					byte*	pSource = (byte*)bitmapData.Scan0.ToPointer();
-
-					#region 32 bpp
-					if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb || bitmap.PixelFormat == PixelFormat.Format24bppRgb)
-					{
-						int pixelBytes = (bitmap.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
-
-						for (y = 0; y < sourceH; y++)
-						{
-							if ((y % 2) == 0)
-							{
-								pSource[y * stride + splitBasedOnVerticalDifferencesL * pixelBytes + 0] = 0;
-								pSource[y * stride + splitBasedOnVerticalDifferencesL * pixelBytes + 1] = 0;
-								pSource[y * stride + splitBasedOnVerticalDifferencesL * pixelBytes + 2] = 255;
-
-								pSource[y * stride + splitBasedOnVerticalDifferencesR * pixelBytes + 0] = 0;
-								pSource[y * stride + splitBasedOnVerticalDifferencesR * pixelBytes + 1] = 255;
-								pSource[y * stride + splitBasedOnVerticalDifferencesR * pixelBytes + 2] = 0;
-							}
-							
-							pSource[y * stride + splitBasedOnVerticalDifferences * pixelBytes + 0] = 255;
-							pSource[y * stride + splitBasedOnVerticalDifferences * pixelBytes + 1] = 0;
-							pSource[y * stride + splitBasedOnVerticalDifferences * pixelBytes + 2] = 0;
-						}
-					}
-					#endregion
-
-					#region 8 bpp
-					else if (bitmap.PixelFormat == PixelFormat.Format8bppIndexed)
-					{
-						if (ImageProcessing.Misc.IsGrayscale(bitmap))
-						{
-							for (y = 0; y < sourceH; y++)
-							{
-								if ((y % 2) == 0)
-								{
-									pSource[y * stride + splitBasedOnVerticalDifferencesL - 1] = 255;
-									pSource[y * stride + splitBasedOnVerticalDifferencesL] = 128;
-									pSource[y * stride + splitBasedOnVerticalDifferencesL + 1] = 255;
-
-									pSource[y * stride + splitBasedOnVerticalDifferencesR - 1] = 255;
-									pSource[y * stride + splitBasedOnVerticalDifferencesR] = 128;
-									pSource[y * stride + splitBasedOnVerticalDifferencesR + 1] = 255;
-								}
-								
-								pSource[y * stride + splitBasedOnVerticalDifferences - 1] = 255;
-								pSource[y * stride + splitBasedOnVerticalDifferences] = 128;
-								pSource[y * stride + splitBasedOnVerticalDifferences + 1] = 255;
-							}
-						}
-						else
-						{
-							Color[] entries = bitmap.Palette.Entries;
-
-							for (y = 0; y < sourceH; y++)
-							{
-								if ((y % 2) == 0)
-								{
-									pSource[y * stride + splitBasedOnVerticalDifferencesL - 1] = (byte)(entries.Length - 1);
-									pSource[y * stride + splitBasedOnVerticalDifferencesL] = 128;
-									pSource[y * stride + splitBasedOnVerticalDifferencesL + 1] = (byte)(entries.Length - 1);
-
-									pSource[y * stride + splitBasedOnVerticalDifferencesR - 1] = (byte)(entries.Length - 1);
-									pSource[y * stride + splitBasedOnVerticalDifferencesR] = 128;
-									pSource[y * stride + splitBasedOnVerticalDifferencesR + 1] = (byte)(entries.Length - 1);
-								}
-								
-								pSource[y * stride + splitBasedOnVerticalDifferences - 1] = (byte)(entries.Length - 1);
-								pSource[y * stride + splitBasedOnVerticalDifferences] = 128;
-								pSource[y * stride + splitBasedOnVerticalDifferences + 1] = (byte)(entries.Length - 1);
-							}
-						}
-					}
-					#endregion
-
-					#region 1 bpp
-					else if (bitmap.PixelFormat == PixelFormat.Format1bppIndexed)
-					{
-						for (y = 0; y < sourceH; y++)
-						{
-							if ((y % 2) == 0)
-							{
-								pSource[y * stride + splitBasedOnVerticalDifferencesL / 8] &= 195;
-								pSource[y * stride + splitBasedOnVerticalDifferencesL / 8] |= 36;
-
-								pSource[y * stride + splitBasedOnVerticalDifferencesR / 8] &= 195;
-								pSource[y * stride + splitBasedOnVerticalDifferencesR / 8] |= 36;
-							}
-
-							pSource[y * stride + splitBasedOnVerticalDifferences / 8] &= 195;
-							pSource[y * stride + splitBasedOnVerticalDifferences / 8] |= 36;
-						}
-					}
-					#endregion
-
-				}
-				finally
-				{
-					if ((bitmap != null) && (bitmapData != null))
-						bitmap.UnlockBits(bitmapData);
-				}
-
-				Directory.CreateDirectory(source.Directory.FullName + @"\Results");
-				bitmap.Save(source.Directory.FullName +  @"\Results\" + Path.GetFileNameWithoutExtension(source.Name) + "_result.png", ImageFormat.Png);
-			}
-		}
-		#endregion
-
 		#region GetAverageVerticalDifferenceOfTopXPercent()
 		double[] GetAverageVerticalDifferenceOfTopXPercent(ImageProcessing.PixelsFormat pixelsFormat, int[,] columnColors, int topPercentage)
 		{
@@ -1010,18 +981,18 @@ namespace BIP.Books
 			minVerticalIndexL = minVerticalIndex;
 			minVerticalIndexR = minVerticalIndex;
 			
-			for (int i = Math.Max(0, minVerticalIndex - 10); i < minVerticalIndex; i++)
+			for (int i = Math.Max(0, minVerticalIndex - 20); i < minVerticalIndex; i++)
 			{
-				if (array[minVerticalIndex] * limitMultiplier >= array[i])
+				if (array[minVerticalIndex] * limitMultiplier >= array[i] || (array[minVerticalIndex] + 10 >= array[i]))
 				{
 					minVerticalIndexL = i;
 					break;
 				}
 			}
 
-			for (int i = Math.Min(minVerticalIndex + 10, arraySize - 1); i > minVerticalIndex; i--)
+			for (int i = Math.Min(minVerticalIndex + 20, arraySize - 1); i > minVerticalIndex; i--)
 			{
-				if (array[minVerticalIndex] * limitMultiplier >= array[i])
+				if (array[minVerticalIndex] * limitMultiplier >= array[i] || (array[minVerticalIndex] + 10 >= array[i]))
 				{
 					minVerticalIndexR = i;
 					break;

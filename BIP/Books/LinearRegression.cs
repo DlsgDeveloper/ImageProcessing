@@ -22,6 +22,16 @@ namespace BIP.Books
 		#endregion
 
 
+		// PUBLIC PROPERTIES
+		#region public properties
+
+		public int PointsCount { get { return _regressionPoints.Count; } }
+
+		#endregion
+
+
+
+
 		// PUBLIC METHODS
 		#region public methods
 
@@ -88,7 +98,7 @@ namespace BIP.Books
 			Recompute();
 		}
 		#endregion
-		
+
 		#endregion
 
 
@@ -96,24 +106,63 @@ namespace BIP.Books
 		#region private methods
 
 		#region Recompute()
+		/*private void Recompute()
+		{
+			if (_regressionPoints.Count > 0)
+			{
+				double sumX = _regressionPoints.Sum(x => x.X * x.Confidence);
+				double sumY = _regressionPoints.Sum(x => x.Y * x.Confidence);
+				double sumXY = _regressionPoints.Sum(x => x.X * x.Y * x.Confidence);
+				double sumX2 = _regressionPoints.Sum(x => x.X * x.X * x.Confidence);
+				double sumW = _regressionPoints.Sum(x => x.Confidence);
+
+				if (((sumW * sumX2) - (sumX * sumX)) > 0)
+				{
+					_a = ((sumW * sumXY) - (sumX * sumY)) / ((sumW * sumX2) - (sumX * sumX));
+					_b = ((sumY * sumX2) - (sumX * sumXY)) / ((sumW * sumX2) - (sumX * sumX));
+				}
+				else
+				{
+					_a = 0;
+					_b = 0;
+				}
+			}
+			else
+			{
+				_a = 0;
+				_b = 0;
+			}
+		}*/
+		#endregion
+
+		#region Recompute()
 		private void Recompute()
 		{
 			if (_regressionPoints.Count > 0)
 			{
 				//for horizontal line		
-
 				List<RegressionPoint> copy = new List<RegressionPoint>();
 
+				// swapping X and Y - for vertical results
 				_regressionPoints.ForEach(x => copy.Add(new RegressionPoint(x.Y, x.X, x.Confidence)));
+
 				int numPoints = copy.Count;
 				double meanX = copy.Average(point => point.X);
 				double meanY = copy.Average(point => point.Y);
 
-				long sumXSquared = GetSumXX(copy);// copy.Sum(point => point.X * point.X);
-				long sumXY = GetSumXY(copy);// copy.Sum(point => point.X * point.Y);
+				long sumXSquared = GetSumXX(copy);
+				long sumXY = GetSumXY(copy);
 
-				_a = (((double)sumXSquared / numPoints - meanX * meanX) != 0) ? ((double)sumXY / numPoints - meanX * meanY) / ((double)sumXSquared / numPoints - meanX * meanX) : 0;
-				_b = -(_a * meanX - meanY);
+				if (((double)sumXSquared / numPoints - meanX * meanX) != 0)
+				{
+					_a = ((double)sumXY / numPoints - meanX * meanY) / ((double)sumXSquared / numPoints - meanX * meanX);
+					_b = -(_a * meanX - meanY);
+				}
+				else
+				{
+					_a = 0;
+					_b = 0;
+				}
 			}
 			else
 			{

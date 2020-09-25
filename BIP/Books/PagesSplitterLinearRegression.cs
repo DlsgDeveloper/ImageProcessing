@@ -14,7 +14,7 @@ namespace BIP.Books
 	/// </summary>
 	public class PagesSplitterLinearRegression
 	{
-		int _goodWeight = 5;
+		int _goodWeight = 10;
 
 		//events
 		public ImageProcessing.ProgressHnd		ProgressChanged;
@@ -48,16 +48,25 @@ namespace BIP.Books
 			LinearRegression linearRegression = new LinearRegression(regressionPoints);
 
 #if DEBUG
+			if (linearRegression.PointsCount > 0)
+				DrawResult(bitmap, linearRegression.GetSplitterLine(bitmap.Width, bitmap.Height), 255, 0, 0);
+
 			DrawPoints(bitmap, regressionPoints, 255, 0, 0);
 #endif
 
 			linearRegression.DeletePointsFurtherThan(100);
 #if DEBUG
+			if (linearRegression.PointsCount > 0)
+				DrawResult(bitmap, linearRegression.GetSplitterLine(bitmap.Width, bitmap.Height), 0, 255, 0);
+
 			DrawPoints(bitmap, regressionPoints, 0, 255, 0);
 #endif
 			linearRegression.DeletePointsFurtherThan(20);
 
 #if DEBUG
+			if (linearRegression.PointsCount > 0)
+				DrawResult(bitmap, linearRegression.GetSplitterLine(bitmap.Width, bitmap.Height), 0, 0, 255);
+
 			DrawPoints(bitmap, regressionPoints, 0, 0, 255);
 #endif
 
@@ -66,7 +75,7 @@ namespace BIP.Books
 		#endregion
 
 		#region DrawResult()
-		public unsafe void DrawResult(Bitmap bitmap, SplitterLine line)
+		public unsafe void DrawResult(Bitmap bitmap, SplitterLine line, byte r, byte g, byte b)
 		{
 			BitmapData bitmapData = null;
 
@@ -76,10 +85,6 @@ namespace BIP.Books
 			int x, y;
 			double xCurrent = line.PointTop.X;
 			double xMove = (line.PointBottom.X - line.PointTop.X) / (double) sourceH;
-
-			byte r = (byte)(line.Confidence > 0 ? 0 : 128);
-			byte g = (byte)(line.Confidence > 0 ? 0 : 128);
-			byte b = (byte)(line.Confidence > 0 ? 255 : 128);
 
 			try
 			{
@@ -191,6 +196,7 @@ namespace BIP.Books
 				int stride = bitmapData.Stride;
 				byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
 
+
 				#region 24 or 32 bpp
 				if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb || bitmap.PixelFormat == PixelFormat.Format24bppRgb)
 				{
@@ -198,9 +204,11 @@ namespace BIP.Books
 
 					foreach (RegressionPoint p in regressionPoints)
 					{
-						for (y = Math.Max(p.Y - 1, 0); y <= Math.Min(sourceH - 1, p.Y + 1); y++)
+						int pointSize = Math.Max(1, Convert.ToInt32(p.Confidence / 20));
+
+						for (y = Math.Max(p.Y - pointSize, 0); y <= Math.Min(sourceH - 1, p.Y + pointSize); y++)
 						{
-							for (x = Math.Max(0, p.X - 1); x <= Math.Min(sourceW, p.X + 1); x++)
+							for (x = Math.Max(0, p.X - pointSize); x <= Math.Min(sourceW, p.X + pointSize); x++)
 							{
 									pSource[y * stride + x * pixelBytes + 0] = b;
 									pSource[y * stride + x * pixelBytes + 1] = g;
@@ -216,9 +224,11 @@ namespace BIP.Books
 				{
 					foreach (RegressionPoint p in regressionPoints)
 					{
-						for (y = Math.Max(p.Y - 1, 0); y <= Math.Min(sourceH - 1, p.Y + 1); y++)
+						int pointSize = Math.Max(1, Convert.ToInt32(p.Confidence));
+
+						for (y = Math.Max(p.Y - pointSize, 0); y <= Math.Min(sourceH - 1, p.Y + pointSize); y++)
 						{
-							for (x = Math.Max(0, p.X - 1); x <= Math.Min(sourceW, p.X + 1); x++)
+							for (x = Math.Max(0, p.X - pointSize); x <= Math.Min(sourceW, p.X + pointSize); x++)
 							{
 								pSource[y * stride + x] = g;
 							}
@@ -298,21 +308,25 @@ namespace BIP.Books
 
 							for(p = 1; p <= shortScanLength; p++)
 							{
-								gray1 = (0.299 * pSource[(row * stride) + (x - p) * pixelBytes + 2] + 0.587 * pSource[(row * stride) + (x - p) * pixelBytes + 1] + 0.114 * pSource[(row * stride) + (x - p) * pixelBytes]);
-								gray2 = (0.299 * pSource[(row * stride) + (x - p + 1) * pixelBytes + 2] + 0.587 * pSource[(row * stride) + (x - p + 1) * pixelBytes + 1] + 0.114 * pSource[(row * stride) + (x - p + 1) * pixelBytes]);
+								gray1 = (pSource[(row * stride) + (x - p) * pixelBytes + 2] + pSource[(row * stride) + (x - p) * pixelBytes + 1] + pSource[(row * stride) + (x - p) * pixelBytes]);
+								gray2 = (pSource[(row * stride) + (x - p + 1) * pixelBytes + 2] + pSource[(row * stride) + (x - p + 1) * pixelBytes + 1] + pSource[(row * stride) + (x - p + 1) * pixelBytes]);
 
 								if (gray1 > gray2)
-									weight++;
+									weight += 2;
 								else if (gray1 < gray2)
-									weight--;
+									weight -= 3;
+								else
+									weight += 1;
 
-								gray3 = (0.299 * pSource[(row * stride) + (x + p - 1) * pixelBytes + 2] + 0.587 * pSource[(row * stride) + (x + p - 1) * pixelBytes + 1] + 0.114 * pSource[(row * stride) + (x + p - 1) * pixelBytes]);
-								gray4 = (0.299 * pSource[(row * stride) + (x + p) * pixelBytes + 2] + 0.587 * pSource[(row * stride) + (x + p) * pixelBytes + 1] + 0.114 * pSource[(row * stride) + (x + p) * pixelBytes]);
+								gray3 = (pSource[(row * stride) + (x + p - 1) * pixelBytes + 2] + pSource[(row * stride) + (x + p - 1) * pixelBytes + 1] + pSource[(row * stride) + (x + p - 1) * pixelBytes]);
+								gray4 = (pSource[(row * stride) + (x + p) * pixelBytes + 2] + pSource[(row * stride) + (x + p) * pixelBytes + 1] + pSource[(row * stride) + (x + p) * pixelBytes]);
 
 								if (gray4 > gray3)
-									weight++;
+									weight += 2;
 								else if (gray4 < gray3)
-									weight--;
+									weight -= 3;
+								else
+									weight++;
 							}
 
 							if(weight > _goodWeight )
