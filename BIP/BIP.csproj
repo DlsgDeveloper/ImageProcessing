@@ -122,6 +122,9 @@
     <Compile Include="Books\PagesSplitterLinearRegression.cs" />
     <Compile Include="Books\RegressionPoint.cs" />
     <Compile Include="Books\SplitterLine.cs" />
+    <Compile Include="Books\TedsBookCurveCorrection\BookCurveSeeker.cs" />
+    <Compile Include="Books\TedsBookCurveCorrection\DataPoint.cs" />
+    <Compile Include="Books\TedsBookCurveCorrection\SingleLineRegion.cs" />
     <Compile Include="Geometry\ImageClip.cs" />
     <Compile Include="Geometry\ImageCornersD.cs" />
     <Compile Include="Geometry\ImageCorners.cs" />

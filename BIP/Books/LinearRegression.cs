@@ -30,8 +30,6 @@ namespace BIP.Books
 		#endregion
 
 
-
-
 		// PUBLIC METHODS
 		#region public methods
 
