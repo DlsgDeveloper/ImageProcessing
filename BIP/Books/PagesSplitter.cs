@@ -21,6 +21,7 @@ namespace BIP.Books
 		}
 		#endregion
 
+
 		// PUBLIC METHODS
 		#region public methods
 
@@ -383,6 +384,7 @@ namespace BIP.Books
 		#endregion
 		
 		#endregion
+
 
 		// PRIVATE METHODS
 		#region private methods

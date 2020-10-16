@@ -73,7 +73,8 @@ namespace TestApp
 			try
 			{
 				//TestApp.BitmapOperations.BitmapFiller.Go();
-				TestApp.Books.PagesSplitterLinearRegressionTest.Test();
+				//TestApp.Books.PagesSplitterLinearRegressionTest.Test();
+				TestApp.Books.BookCurveCorrection.BookCurveSeeker.Test();
 			}
 			catch (Exception ex)
 			{
