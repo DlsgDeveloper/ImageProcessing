@@ -111,10 +111,6 @@
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <ProjectReference Include="..\BIP\BIP.csproj">
-      <Project>{50AFC35D-21B2-4744-A3BC-DBB7234E410E}</Project>
-      <Name>BIP</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigImages\Sharpening.cs" />
