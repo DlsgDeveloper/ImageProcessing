@@ -30,10 +30,15 @@ namespace ImageProcessing.IpSettings
 		#region MakeDependantClipsSameSize()
 		public List<ImageProcessing.IpSettings.ItImage> MakeDependantClipsSameSize(float offsetInch, InchSize size)
 		{
+			return MakeDependantClipsSameSize(offsetInch, size, 0, 0);
+		}
+
+		public List<ImageProcessing.IpSettings.ItImage> MakeDependantClipsSameSize(float offsetInch, InchSize size, float dependencyHorizontalSizeMargin, float dependencyVerticalSizeMargin)
+		{
 			bool twoPagesArticle = IsTwoPageArticle();
 
 			//check if all dependant images are valid
-			List<ImageProcessing.IpSettings.ItImage> nonDependentImages = CheckDependency(twoPagesArticle, size);
+			List<ImageProcessing.IpSettings.ItImage> nonDependentImages = CheckDependency(twoPagesArticle, size, dependencyHorizontalSizeMargin, dependencyVerticalSizeMargin);
 
 			double heightRangeInch = GetMaxDependantImageHeightInInches() * 0.05;
 
@@ -121,7 +126,7 @@ namespace ImageProcessing.IpSettings
 			return nonDependentImages;
 		}
 		#endregion
-	
+
 		#region ChangeClipsSize()
 		public void ChangeClipsSize(double dl, double dt, double dr, double db, bool fixedClipSize)
 		{
@@ -524,32 +529,31 @@ namespace ImageProcessing.IpSettings
 		/// <param name="twoPagesArticle"></param>
 		/// <param name="clipSizeInInches"></param>
 		/// <returns></returns>
-		private List<ItImage> CheckDependency(bool twoPagesArticle, InchSize clipSizeInInches)
+		private List<ItImage> CheckDependency(bool twoPagesArticle, InchSize clipSizeInInches, float dependencyHorizontalImageSizeMargin, float dependencyVerticalImageSizeMargin)
 		{
 			List<ItImage> dependentImages = new List<ItImage>();
-			
 			if (twoPagesArticle)
 			{
 				foreach (ImageProcessing.IpSettings.ItImage itImage in this)
 				{
 					if (itImage.IsFixed == false && itImage.IsIndependent == false)
 					{
-						if (itImage.IsLandscapeImage == false && itImage.InchSize.Width < clipSizeInInches.Width * 2)
+						if (itImage.IsLandscapeImage == false && ((itImage.InchSize.Width + dependencyHorizontalImageSizeMargin) < clipSizeInInches.Width * 2))
 						{
 							itImage.IsIndependent = true;
 							dependentImages.Add(itImage);
 						}
-						else if (itImage.InchSize.Width < clipSizeInInches.Width || itImage.InchSize.Height < clipSizeInInches.Height)
+						else if (((itImage.InchSize.Width + dependencyHorizontalImageSizeMargin) < clipSizeInInches.Width) || ((itImage.InchSize.Height + dependencyVerticalImageSizeMargin) < clipSizeInInches.Height))
 						{
 							itImage.IsIndependent = true;
 							dependentImages.Add(itImage);
 						}
-						else if (itImage.Page.ClipContentSpecified && (itImage.Page.ContentInch.Width > clipSizeInInches.Width || itImage.Page.ContentInch.Height > clipSizeInInches.Height))
+						else if (itImage.Page.ClipContentSpecified && (((itImage.Page.ContentInch.Width - dependencyHorizontalImageSizeMargin) > clipSizeInInches.Width) || ((itImage.Page.ContentInch.Height - dependencyVerticalImageSizeMargin) > clipSizeInInches.Height)))
 						{
 							itImage.IsIndependent = true;
 							dependentImages.Add(itImage);
 						}
-						else if (itImage.TwoPages && itImage.PageR.ClipContentSpecified && (itImage.PageR.ContentInch.Width > clipSizeInInches.Width || itImage.PageR.ContentInch.Height > clipSizeInInches.Height))
+						else if (itImage.TwoPages && itImage.PageR.ClipContentSpecified && (((itImage.PageR.ContentInch.Width - dependencyHorizontalImageSizeMargin) > clipSizeInInches.Width) || ((itImage.PageR.ContentInch.Height - dependencyVerticalImageSizeMargin) > clipSizeInInches.Height)))
 						{
 							itImage.IsIndependent = true;
 							dependentImages.Add(itImage);
@@ -563,17 +567,17 @@ namespace ImageProcessing.IpSettings
 				{
 					if (itImage.IsFixed == false && itImage.IsIndependent == false)
 					{
-						if (itImage.InchSize.Width < clipSizeInInches.Width || itImage.InchSize.Height < clipSizeInInches.Height)
+						if (((itImage.InchSize.Width + dependencyHorizontalImageSizeMargin) < clipSizeInInches.Width) || ((itImage.InchSize.Height + dependencyVerticalImageSizeMargin) < clipSizeInInches.Height))
 						{
 							itImage.IsIndependent = true;
 							dependentImages.Add(itImage);
 						}
-						if (itImage.Page.ClipContentSpecified && (itImage.Page.ContentInch.Width > clipSizeInInches.Width || itImage.Page.ContentInch.Height > clipSizeInInches.Height))
+						if (itImage.Page.ClipContentSpecified && (((itImage.Page.ContentInch.Width - dependencyHorizontalImageSizeMargin) > clipSizeInInches.Width) || ((itImage.Page.ContentInch.Height - dependencyVerticalImageSizeMargin) > clipSizeInInches.Height)))
 						{
 							itImage.IsIndependent = true;
 							dependentImages.Add(itImage);
 						}
-						if (itImage.TwoPages && itImage.PageR.ClipContentSpecified && (itImage.PageR.ContentInch.Width > clipSizeInInches.Width || itImage.PageR.ContentInch.Height > clipSizeInInches.Height))
+						if (itImage.TwoPages && itImage.PageR.ClipContentSpecified && (((itImage.PageR.ContentInch.Width - dependencyHorizontalImageSizeMargin) > clipSizeInInches.Width) || ((itImage.PageR.ContentInch.Height - dependencyVerticalImageSizeMargin) > clipSizeInInches.Height)))
 						{
 							itImage.IsIndependent = true;
 							dependentImages.Add(itImage);

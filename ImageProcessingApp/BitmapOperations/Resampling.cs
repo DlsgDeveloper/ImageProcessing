@@ -14,8 +14,8 @@ namespace TestApp.BitmapOperations
 		#region Resample()
 		public static void Resample()
 		{
-			DirectoryInfo sourceDir = new DirectoryInfo(@"C:\Users\jirka.stybnar\TestRun\ImageProcessing\Resampling");
-			DirectoryInfo destDir = new DirectoryInfo(@"C:\Users\jirka.stybnar\TestRun\ImageProcessing\Resampling\results");
+			DirectoryInfo sourceDir = new DirectoryInfo(TestApp.Misc.TestRunDir.FullName + @"\ImageProcessing\Resampling");
+			DirectoryInfo destDir = new DirectoryInfo(TestApp.Misc.TestRunDir.FullName + @"\ImageProcessing\Resampling\results");
 			List<FileInfo> list = sourceDir.GetFiles().ToList();
 
 			destDir.Create();

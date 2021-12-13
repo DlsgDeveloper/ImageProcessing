@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
-[assembly: AssemblyVersion("3.8.12.0")]
+[assembly: AssemblyVersion("3.8.13.0")]
 
 [assembly: AssemblyDelaySign(false)]
 //[assembly: AssemblyKeyFile("C:\\Documents and Settings\\Jirka\\My Documents\\prog\\ImageProcessing\\ImageProcessing\\ImageProcessing.BigImages.snk")]

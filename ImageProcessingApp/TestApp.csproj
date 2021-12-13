@@ -173,6 +173,12 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BIP\BIP.csproj">
+      <Project>{50afc35d-21b2-4744-a3bc-dbb7234e410e}</Project>
+      <Name>BIP</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
