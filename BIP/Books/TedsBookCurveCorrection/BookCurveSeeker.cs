@@ -14,8 +14,8 @@ namespace ImageProcessing.Books.TedsBookCurveCorrection
 		double	_regionWidthInInches = 0.5;
 		int		_maxAngleToTest = 10;
 
-		double _topOfTheLineThreshold = 1.2;
-		double _bottomOfTheLineThreshold = .8;
+		//double _topOfTheLineThreshold = 1.2;
+		//double _bottomOfTheLineThreshold = .8;
 
 
 		// PUBLIC METHODS

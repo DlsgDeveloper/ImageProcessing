@@ -281,7 +281,7 @@ namespace BIP.Books
 			int width = clip.Width;
 			int height = clip.Height;
 
-			int x, y, row, p;
+			int x, row, p;
 			double gray1, gray2, gray3, gray4, weight;
 
 			_goodWeight = shortScanLength;
