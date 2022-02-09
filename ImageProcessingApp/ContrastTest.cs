@@ -1,11 +1,12 @@
-﻿using System;
+﻿using ImageProcessing;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
 namespace TestApp
 {
-	class ContrastTest
+	class ContrastTest : TestBase
 	{
 		#region Go()
 		public static void Go()
@@ -32,5 +33,44 @@ namespace TestApp
 			}
 		}
 		#endregion
+
+		#region ChangeContrast()
+		private static void ChangeContrast()
+		{
+			Bitmap bitmap = new Bitmap(@"C:\Users\jirka.stybnar\TestRun\BrightnessContrast\127.jpg");
+			DateTime start = DateTime.Now;
+
+			ImageProcessing.Histogram histogram = new Histogram(bitmap);
+			ImageProcessing.Contrast.Go(bitmap, 0.5, histogram.Mean);
+			//Bitmap result = ImageProcessing.Contrast.GetBitmap(bitmap, -0.5, histogram.Mean);
+
+			Console.WriteLine("Total time: " + DateTime.Now.Subtract(start).ToString());
+
+			bitmap.Save(@"C:\Users\jirka.stybnar\TestRun\BrightnessContrast\result.png", ImageFormat.Png);
+			bitmap.Dispose();
+		}
+		#endregion
+
+		#region ChangeContrastBigImage()
+		private static void ChangeContrastBigImage()
+		{
+			string source = @"C:\Users\jirka.stybnar\TestRun\Big Images\24 bpp 1200dpi.jpg";
+			string dest = @"C:\delete\result.jpg";
+			DateTime start = DateTime.Now;
+
+			ImageProcessing.Histogram histogram = new ImageProcessing.Histogram();
+			histogram.ProgressChanged += new ImageProcessing.ProgressHnd(ProgressChanged);
+
+			ImageProcessing.BigImages.Contrast contrast = new ImageProcessing.BigImages.Contrast();
+			contrast.ProgressChanged += new ImageProcessing.ProgressHnd(ProgressChanged);
+
+			using (ImageProcessing.BigImages.ItDecoder itDecoder = new ImageProcessing.BigImages.ItDecoder(source))
+			{
+				histogram.Compute(itDecoder);
+				contrast.ChangeContrast(itDecoder, dest, new ImageProcessing.FileFormat.Jpeg(80), -0.5, histogram.Mean);
+			}
+		}
+		#endregion
+
 	}
 }

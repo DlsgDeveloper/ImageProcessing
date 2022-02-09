@@ -29,5 +29,20 @@ namespace TestApp
 			}
 		}
 		#endregion
+
+		#region AutoLevels()
+		private static void AutoLevels()
+		{
+			Bitmap bitmap = new Bitmap(@"C:\delete\01.png");
+			DateTime start = DateTime.Now;
+
+			ImageProcessing.AutoLevels.Get(bitmap, 0.005, 0.02);
+
+			Console.WriteLine("Total time: " + DateTime.Now.Subtract(start).ToString());
+
+			bitmap.Save(@"C:\delete\result.png", ImageFormat.Png);
+			bitmap.Dispose();
+		}
+		#endregion
 	}
 }

@@ -569,8 +569,6 @@ namespace ImageProcessing
 
 			try
 			{
-				int b = Convert.ToInt32(brightness * 256);
-
 				if(clip.IsEmpty)
 					clip = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 				else
@@ -584,7 +582,7 @@ namespace ImageProcessing
 					case PixelFormat.Format8bppIndexed:
 						{
 							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
-								GoInternalV2(bitmap, clip, b);
+								GoInternalV2(bitmap, clip, brightness);
 							else
 								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
 						} break;
@@ -592,7 +590,7 @@ namespace ImageProcessing
 					case PixelFormat.Format32bppArgb:
 					case PixelFormat.Format32bppRgb:
 					case PixelFormat.Format32bppPArgb:
-						GoInternalV2(bitmap, clip, b);
+						GoInternalV2(bitmap, clip, brightness);
 						break;
 					default:
 						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
@@ -951,7 +949,7 @@ namespace ImageProcessing
 		#endregion
 
 		#region GoInternalV2()
-		private static void GoInternalV2(Bitmap bitmap, Rectangle clip, int brightness)
+		private static void GoInternalV2(Bitmap bitmap, Rectangle clip, double brightness)
 		{
 			BitmapData bitmapData = null;
 

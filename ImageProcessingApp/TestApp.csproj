@@ -114,7 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoLevelsTest.cs" />
-    <Compile Include="BigImages\Sharpening.cs" />
+    <Compile Include="SharpeningTest.cs" />
     <Compile Include="BitmapOperations\BitmapFiller.cs" />
     <Compile Include="BitmapOperations\Exposure.cs" />
     <Compile Include="BitmapOperations\Insertor.cs" />
@@ -132,10 +132,10 @@
     <Compile Include="Line2D.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="PixelsComparer.cs" />
-    <Compile Include="Rotation.cs" />
+    <Compile Include="RotationTest.cs" />
     <Compile Include="Resizing.cs" />
     <Compile Include="Merging.cs" />
-    <Compile Include="UnsharpMask.cs" />
+    <Compile Include="TestBase.cs" />
     <Content Include="App.ico" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

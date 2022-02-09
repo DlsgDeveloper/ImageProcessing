@@ -114,6 +114,7 @@ namespace ImageProcessing
 
 		#endregion
 
+
 		// PRIVATE METHODS
 		#region private methods
 
