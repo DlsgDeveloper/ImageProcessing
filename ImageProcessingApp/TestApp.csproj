@@ -113,6 +113,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoLevelsTest.cs" />
     <Compile Include="BigImages\Sharpening.cs" />
     <Compile Include="BitmapOperations\BitmapFiller.cs" />
     <Compile Include="BitmapOperations\Exposure.cs" />
@@ -124,10 +125,13 @@
     <Compile Include="Books\BookCurveCorrection\BookCurveSeeker.cs" />
     <Compile Include="Books\PagesSplitterLinearRegressionTest.cs" />
     <Compile Include="BrightnessContrastTest.cs" />
+    <Compile Include="BrightnessTest.cs" />
+    <Compile Include="ContrastTest.cs" />
     <Compile Include="EdgeDetection.cs" />
     <Compile Include="ImageFile\ImageInfoTester.cs" />
     <Compile Include="Line2D.cs" />
     <Compile Include="Misc.cs" />
+    <Compile Include="PixelsComparer.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="Resizing.cs" />
     <Compile Include="Merging.cs" />

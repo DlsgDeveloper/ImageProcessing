@@ -19,7 +19,7 @@ namespace ImageProcessing
 		/// histogram mean is computed
 		/// </summary>
 		/// <param name="bitmap"></param>
-		/// <param name="contrast"></param>
+		/// <param name="contrast">From -1 to +1</param>
 		/// <returns></returns>
 		public static Bitmap GetBitmap(Bitmap bitmap, double contrast)
 		{
@@ -78,12 +78,49 @@ namespace ImageProcessing
 		}
 		#endregion
 
+		#region GetBitmapV2()
+		/// <summary>
+		/// Same as Photoshop Contrast.
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="contrast">From -1 to +1</param>
+		/// <returns></returns>
+		public static Bitmap GetBitmapV2(Bitmap bitmap, double contrast)
+		{
+			try
+			{
+				switch (bitmap.PixelFormat)
+				{
+					case PixelFormat.Format8bppIndexed:
+						{
+							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
+								return Get8bppGrayscaleV2(bitmap, contrast);
+							else
+								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
+						}
+					case PixelFormat.Format24bppRgb:
+						return Get24bppV2(bitmap, contrast);
+					case PixelFormat.Format32bppArgb:
+					case PixelFormat.Format32bppRgb:
+					case PixelFormat.Format32bppPArgb:
+						return Get32bppV2(bitmap, contrast);
+					default:
+						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("Contrast, GetBitmapV2(): " + ex.Message, ex);
+			}
+		}
+		#endregion
+
 		#region Go()
 		/// <summary>
 		/// histogram mean is computed
 		/// </summary>
 		/// <param name="bitmap"></param>
-		/// <param name="contrast"></param>
+		/// <param name="contrast">From -1 to +1</param>
 		public static void Go(Bitmap bitmap, double contrast)
 		{
 			ImageProcessing.ColorD histogramMean = Histogram.GetHistogramMean(bitmap);
@@ -139,6 +176,62 @@ namespace ImageProcessing
 #if DEBUG
 				Console.WriteLine("Contrast Go():" + (DateTime.Now.Subtract(start)).ToString());
 #endif
+			}
+		}
+		#endregion
+
+		#region GoV2()
+		/// <summary>
+		/// Similar to Photoshop algorithm.
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="contrast">From -1 to +1</param>
+		public static void GoV2(Bitmap bitmap, double contrast)
+		{
+			GoV2(bitmap, Rectangle.Empty, contrast);
+		}
+
+		/// <summary>
+		/// Similar to Photoshop algorithm.
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="clip"></param>
+		/// <param name="contrast"></param>
+		/// <param name="histogramMean"></param>
+		public static void GoV2(Bitmap bitmap, Rectangle clip, double contrast)
+		{
+			try
+			{
+				if (clip.IsEmpty)
+					clip = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+				else
+					clip.Intersect(new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+
+				switch (bitmap.PixelFormat)
+				{
+					case PixelFormat.Format8bppIndexed:
+						{
+							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
+								Go8bppGrayscaleV2(bitmap, clip, contrast);
+							else
+								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
+						}
+						break;
+					case PixelFormat.Format24bppRgb:
+						Go24bppV2(bitmap, clip, contrast);
+						break;
+					case PixelFormat.Format32bppArgb:
+					case PixelFormat.Format32bppRgb:
+					case PixelFormat.Format32bppPArgb:
+						Go32bppV2(bitmap, clip, contrast);
+						break;
+					default:
+						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("Contrast, GoV2(): " + ex.Message);
 			}
 		}
 		#endregion
@@ -315,6 +408,48 @@ namespace ImageProcessing
 		}
 		#endregion
 
+		#region Go32bppV2()
+		private static void Go32bppV2(Bitmap bitmap, Rectangle clip, double contrast)
+		{
+			BitmapData bitmapData = null;
+
+			try
+			{
+				int width = clip.Width;
+				int height = clip.Height;
+				byte[] array = GetArray(contrast);
+
+				bitmapData = bitmap.LockBits(clip, ImageLockMode.ReadWrite, bitmap.PixelFormat);
+
+				int strideS = bitmapData.Stride;
+
+				unsafe
+				{
+					byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+					byte* pCurrentS;
+					int x, y;
+
+					for (y = 0; y < height; y++)
+					{
+						pCurrentS = pSource + (y * strideS);
+
+						for (x = 0; x < width; x++)
+						{
+							pCurrentS[x * 4] = array[pCurrentS[x * 4]];
+							pCurrentS[x * 4 + 1] = array[pCurrentS[x * 4 + 1]];
+							pCurrentS[x * 4 + 2] = array[pCurrentS[x * 4 + 2]];
+						}
+					}
+				}
+			}
+			finally
+			{
+				if (bitmapData != null)
+					bitmap.UnlockBits(bitmapData);
+			}
+		}
+		#endregion
+
 		#region Get24bpp()
 		private static Bitmap Get24bpp(Bitmap bitmap, Rectangle clip, double contrast, ColorD histogramMean)
 		{
@@ -478,22 +613,16 @@ namespace ImageProcessing
 		}
 		#endregion
 
-		#region Go24bpp()
-		/*private static void Go24bpp(Bitmap bitmap, Rectangle clip, double contrast, ColorD histogramMean)
+		#region Go24bppV2()
+		private static void Go24bppV2(Bitmap bitmap, Rectangle clip, double contrast)
 		{
 			BitmapData bitmapData = null;
 
 			try
 			{
-				double meanR = histogramMean.Red / 255.0;
-				double meanG = histogramMean.Green / 255.0;
-				double meanB = histogramMean.Blue / 255.0;
-
 				int width = clip.Width;
 				int height = clip.Height;
-
-				contrast = ((contrast > 1) ? 1 : ((contrast < -1) ? -1 : contrast));
-				contrast = Math.Tan((contrast + 1.0) * Math.PI / 4);
+				byte[] array = GetArray(contrast);
 
 				bitmapData = bitmap.LockBits(clip, ImageLockMode.ReadWrite, bitmap.PixelFormat);
 
@@ -503,9 +632,7 @@ namespace ImageProcessing
 				{
 					byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
 					byte* pCurrentS;
-
 					int x, y;
-					double color;
 
 					for (y = 0; y < height; y++)
 					{
@@ -513,35 +640,9 @@ namespace ImageProcessing
 
 						for (x = 0; x < width; x++)
 						{
-							//blue
-							color = ((pCurrentS[x * 3] / 255.0 - meanB) * contrast) + meanB;
-
-							if (color <= 0)
-								pCurrentS[x * 3] = 0;
-							else if (color >= 1)
-								pCurrentS[x * 3] = 255;
-							else
-								pCurrentS[x * 3] = (byte)(color * 255);
-
-							//green
-							color = ((pCurrentS[x * 3 + 1] / 255.0 - meanG) * contrast) + meanG;
-
-							if (color <= 0)
-								pCurrentS[x * 3 + 1] = (byte)0;
-							else if (color >= 1)
-								pCurrentS[x * 3 + 1] = (byte)255;
-							else
-								pCurrentS[x * 3 + 1] = (byte)(color * 255);
-
-							//red
-							color = ((pCurrentS[x * 3 + 2] / 255.0 - meanR) * contrast) + meanR;
-
-							if (color <= 0)
-								pCurrentS[x * 3 + 2] = (byte)0;
-							else if (color >= 1)
-								pCurrentS[x * 3 + 2] = (byte)255;
-							else
-								pCurrentS[x * 3 + 2] = (byte)(color * 255);
+							pCurrentS[x * 3] = array[pCurrentS[x * 3]];
+							pCurrentS[x * 3 + 1] = array[pCurrentS[x * 3 + 1]];
+							pCurrentS[x * 3 + 2] = array[pCurrentS[x * 3 + 2]];
 						}
 					}
 				}
@@ -551,9 +652,9 @@ namespace ImageProcessing
 				if (bitmapData != null)
 					bitmap.UnlockBits(bitmapData);
 			}
-		}*/
+		}
 		#endregion
-	
+
 		#region Get8bppGrayscale()
 		private static Bitmap Get8bppGrayscale(Bitmap bitmap, Rectangle clip, double contrast, ColorD histogramMean)
 		{
@@ -671,8 +772,235 @@ namespace ImageProcessing
 		}
 		#endregion
 
+		#region Go8bppGrayscaleV2()
+		private static void Go8bppGrayscaleV2(Bitmap bitmap, Rectangle clip, double contrast)
+		{
+			BitmapData bitmapData = null;
+
+			try
+			{
+				int width = clip.Width;
+				int height = clip.Height;
+				byte[] array = GetArray(contrast);
+
+				bitmapData = bitmap.LockBits(clip, ImageLockMode.ReadWrite, bitmap.PixelFormat);
+
+				int strideS = bitmapData.Stride;
+
+				unsafe
+				{
+					byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+					byte* pCurrentS;
+					int x, y;
+
+					for (y = 0; y < height; y++)
+					{
+						pCurrentS = pSource + (y * strideS);
+
+						for (x = 0; x < width; x++)
+							pCurrentS[x] = array[pCurrentS[x]];
+					}
+				}
+			}
+			finally
+			{
+				if (bitmapData != null)
+					bitmap.UnlockBits(bitmapData);
+			}
+		}
 		#endregion
 
-	
+		#region Get32bppV2()
+		private static Bitmap Get32bppV2(Bitmap bitmap, double contrast)
+		{
+			Bitmap result = null;
+			BitmapData bitmapData = null;
+			BitmapData resultData = null;
+
+			try
+			{
+				int width = bitmap.Width;
+				int height = bitmap.Height;
+
+				byte[] array = GetArray(contrast);
+
+				result = new Bitmap(width, height, bitmap.PixelFormat);
+				bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+				resultData = result.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+				int strideS = bitmapData.Stride;
+				int strideR = resultData.Stride;
+
+				unsafe
+				{
+					byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+					byte* pResult = (byte*)resultData.Scan0.ToPointer();
+					byte* pCurrentS, pCurrentR;
+
+					int x, y;
+
+					for (y = 0; y < height; y++)
+					{
+						pCurrentS = pSource + (y * strideS);
+						pCurrentR = pResult + (y * strideR);
+
+						for (x = 0; x < width; x++)
+						{
+							pCurrentR[x * 4] = array[pCurrentS[x * 4]];
+							pCurrentR[x * 4 + 1] = array[pCurrentS[x * 4 + 1]];
+							pCurrentR[x * 4 + 2] = array[pCurrentS[x * 4 + 2]];
+							pCurrentR[x * 4 + 3] = pCurrentS[x * 4 + 3];
+						}
+					}
+				}
+
+				return result;
+			}
+			finally
+			{
+				if (bitmapData != null)
+					bitmap.UnlockBits(bitmapData);
+				if (resultData != null)
+					result.UnlockBits(resultData);
+			}
+		}
+		#endregion
+
+		#region Get24bppV2()
+		private static Bitmap Get24bppV2(Bitmap bitmap, double contrast)
+		{
+			Bitmap result = null;
+			BitmapData bitmapData = null;
+			BitmapData resultData = null;
+
+			try
+			{
+				int width = bitmap.Width;
+				int height = bitmap.Height;
+
+				byte[] array = GetArray(contrast);
+
+				result = new Bitmap(width, height, bitmap.PixelFormat);
+				bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+				resultData = result.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+				int strideS = bitmapData.Stride;
+				int strideR = resultData.Stride;
+
+				unsafe
+				{
+					byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+					byte* pResult = (byte*)resultData.Scan0.ToPointer();
+					byte* pCurrentS, pCurrentR;
+
+					int x, y;
+
+					for (y = 0; y < height; y++)
+					{
+						pCurrentS = pSource + (y * strideS);
+						pCurrentR = pResult + (y * strideR);
+
+						for (x = 0; x < width; x++)
+						{
+							pCurrentR[x * 3] = array[pCurrentS[x * 3]];
+							pCurrentR[x * 3 + 1] = array[pCurrentS[x * 3 + 1]];
+							pCurrentR[x * 3 + 2] = array[pCurrentS[x * 3 + 2]];
+						}
+					}
+				}
+
+				return result;
+			}
+			finally
+			{
+				if (bitmapData != null)
+					bitmap.UnlockBits(bitmapData);
+				if (resultData != null)
+					result.UnlockBits(resultData);
+			}
+		}
+		#endregion
+
+		#region Get8bppGrayscaleV2()
+		private static Bitmap Get8bppGrayscaleV2(Bitmap bitmap, double contrast)
+		{
+			Bitmap result = null;
+			BitmapData bitmapData = null;
+			BitmapData resultData = null;
+
+			try
+			{
+				int width = bitmap.Width;
+				int height = bitmap.Height;
+
+				byte[] array = GetArray(contrast);
+
+				result = new Bitmap(width, height, bitmap.PixelFormat);
+				bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+				resultData = result.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+				int strideS = bitmapData.Stride;
+				int strideR = resultData.Stride;
+
+				unsafe
+				{
+					byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+					byte* pResult = (byte*)resultData.Scan0.ToPointer();
+					byte* pCurrentS, pCurrentR;
+
+					int x, y;
+
+					for (y = 0; y < height; y++)
+					{
+						pCurrentS = pSource + (y * strideS);
+						pCurrentR = pResult + (y * strideR);
+
+						for (x = 0; x < width; x++)
+							pCurrentR[x] = array[pCurrentS[x]];
+					}
+				}
+
+				return result;
+			}
+			finally
+			{
+				if (bitmapData != null)
+					bitmap.UnlockBits(bitmapData);
+				if (resultData != null)
+					result.UnlockBits(resultData);
+			}
+		}
+		#endregion
+
+		#region GetArray()
+		private static byte[] GetArray(double contrast)
+		{
+			byte[] array = new byte[256];
+
+			contrast = Math.Max(-1, Math.Min(1, contrast));
+
+			if(contrast < 0)
+			{
+				for (int i = 0; i < 256; i++)
+					array[i] = Convert.ToByte(i + Math.Sin((i / 127.0) * Math.PI + Math.PI) * (contrast * 12.0));
+			}
+			else if(contrast > 0)
+			{
+				for (int i = 0; i < 256; i++)
+					array[i] = Convert.ToByte(i + Math.Sin((i / 127.0) * Math.PI + Math.PI) * (contrast * 24.0));
+			}
+			else
+			{
+				for (byte i = 0; i <= 255; i++)
+					array[i] = i;
+			}
+
+			return array;
+		}
+		#endregion
+
+		#endregion
+
+
 	}
 }

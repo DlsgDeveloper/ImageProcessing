@@ -109,18 +109,16 @@ namespace TestApp
 		#region ResizeBigImage()
 		public unsafe static void ResizeBigImage()
 		{
-			string source = @"C:\Users\jirka.stybnar\TestRun\Resizing\00000038_000001.jpg";
-			string dest = @"C:\Users\jirka.stybnar\TestRun\Resizing\result.png";
-
+			string source = @"C:\\ProgramData\\DLSG\\KIC\\Images\\Default User\\Session_2022-01-13_14-37-49\\1004_1.kic";
+			string dest = @"C:\\ProgramData\\DLSG\\KIC\\Images\\Default User\\Session_2022-01-13_14-37-49\\1004_1_preview.kic";
 			DateTime start = DateTime.Now;
-
 
 			using (ImageProcessing.BigImages.ItDecoder itDecoder = new ImageProcessing.BigImages.ItDecoder(source))
 			{
 				ImageProcessing.BigImages.Resizing resizing = new ImageProcessing.BigImages.Resizing();
-				double zoom = Math.Min(1.0, 300.0 / itDecoder.DpiX);
+				double zoom = 0.5;
 
-				resizing.ProgressChanged += new ImageProcessing.ProgressHnd(ProgressChanged);
+				//resizing.ProgressChanged += new ImageProcessing.ProgressHnd(ProgressChanged);
 
 				if (itDecoder.PixelFormat == System.Drawing.Imaging.PixelFormat.Format1bppIndexed)
 				{
@@ -128,9 +126,11 @@ namespace TestApp
 				}
 				else
 				{
-					resizing.Resize(itDecoder, dest, new ImageProcessing.FileFormat.Jpeg(85), zoom);
+					resizing.Resize(itDecoder, dest, new ImageProcessing.FileFormat.Jpeg(90), zoom);
 				}
 			}
+
+			Console.WriteLine("KicImageFiles, CreateReducedFiles() 3: {0}", DateTime.Now.Subtract(start));
 		}
 		#endregion
 

@@ -1,10 +1,6 @@
-using System;
-using System.Drawing ;
-using System.Drawing.Imaging ;
-using System.Collections;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 
 namespace ImageProcessing
@@ -21,7 +17,9 @@ namespace ImageProcessing
 		}
 		#endregion
 
-		//	PUBLIC METHODS
+
+		// PUBLIC METHODS
+		#region public methods
 
 		#region Compare()
 		public static List<Point> Compare(Bitmap bitmap1, Bitmap bitmap2)
@@ -40,7 +38,11 @@ namespace ImageProcessing
 		}
 		#endregion
 
-		//PRIVATE METHODS
+		#endregion
+
+
+		// PRIVATE METHODS
+		#region private methods
 
 		#region Compare32bpp()
 		private static List<Point> Compare32bpp(Bitmap bitmap1, Bitmap bitmap2)
@@ -228,5 +230,7 @@ namespace ImageProcessing
 		}
 		#endregion
 	
+		#endregion
+
 	}
 }

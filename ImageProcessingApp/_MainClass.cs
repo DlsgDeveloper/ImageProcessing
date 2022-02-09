@@ -1,19 +1,15 @@
-using System;
-using System.IO ;
-using System.Drawing ;
-using System.Drawing.Imaging ;
-using System.Collections;
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
-using System.Threading;
-using System.Collections.Generic;
-using System.Windows.Forms;
-
-using ImageProcessing;
-using ImageProcessing.PageObjects;
 using BIP.Geometry;
-using TestApp.ImageFile;
+using ImageProcessing;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace TestApp
 {
@@ -72,7 +68,8 @@ namespace TestApp
 			
 			try
 			{
-				TestApp.BitmapOperations.Resampling.Resample();
+				TestApp.BrightnessContrastTest.Go();
+				//TestApp.PixelsComparer.Go();
 			}
 			catch (Exception ex)
 			{
@@ -84,12 +81,14 @@ namespace TestApp
 				{
 					Console.WriteLine(ex.Message);
 				} while ((ex = ex.InnerException) != null);
+
+				Console.ReadLine();
 			}
 			finally
 			{
 				Console.WriteLine();
 				Console.WriteLine("Done. Total Time: " + DateTime.Now.Subtract(start).ToString());
-				Console.ReadLine();
+				//Console.ReadLine();
 			}
 		}
 		#endregion 
@@ -167,7 +166,6 @@ namespace TestApp
 			//string source = @"C:\Documents and Settings\Jirka\My Documents\projects\Image Processing\Binorization\Bookeye Binorization\bi\058922_c.tif";
 			string source = @"C:\Documents and Settings\Jirka\My Documents\projects\Image Processing\Binorization\Bookeye Binorization\bi\058922_g.png";
 			string dest = @"C:\Documents and Settings\Jirka\My Documents\projects\Image Processing\Binorization\Bookeye Binorization\bi\result.png";
-			DateTime start = DateTime.Now;
 
 			ImageProcessing.BigImages.Binarization binarization = new ImageProcessing.BigImages.Binarization();
 			//binarization.ProgressChanged += new ImageProcessing.ProgressHnd(ProgressChanged);
@@ -1014,7 +1012,6 @@ namespace TestApp
 			Bitmap		sourceBitmap = new Bitmap(source.FullName);
 			DateTime	start = DateTime.Now ;
 
-			start = DateTime.Now;
 			Bitmap result = ImageProcessing.DRS2.Get(sourceBitmap, 0, 0, true);
 			
 			Console.WriteLine(string.Format("DRS2 on {0}: {1}", source.FullName, DateTime.Now.Subtract(start).ToString()));			
@@ -1057,7 +1054,6 @@ namespace TestApp
 		{
 			FileInfo imageFile = new FileInfo(@"C:\Documents and Settings\Jirka\My Documents\temp\IP\01 Preprocessing Dark.png");
 			Bitmap image = new Bitmap(imageFile.FullName);
-			DateTime start = DateTime.Now;
 			Rectangle rect = new Rectangle(0, 0, image.Width, image.Height); ;
 
 			/*FileInfo resultFile = new FileInfo(@"C:\Documents and Settings\Jirka\My Documents\temp\IP\01 Preprocessing Dark Get.png");
@@ -1075,7 +1071,6 @@ namespace TestApp
 			/*FileInfo resultFile = new FileInfo(@"C:\Documents and Settings\Jirka\My Documents\temp\IP\01 Preprocessing Dark Go.png");
 			ImageProcessing.Erosion.Go(image, Rectangle.Empty, ImageProcessing.Erosion.Operator.Full);
 			image.Save(resultFile.FullName, ImageFormat.Png);*/
-
 
 			Console.ReadLine();
 		}

@@ -1,10 +1,7 @@
 using System;
-using System.Drawing ;
-using System.Drawing.Imaging ;
-using System.Collections;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 
 namespace ImageProcessing
@@ -14,10 +11,70 @@ namespace ImageProcessing
 	/// </summary>
 	public class Brightness
 	{
-
 		#region variables
 
-		static List<byte[]> brightArray = new List<byte[]> {
+		static readonly byte[] _negativeArray = new byte[]
+		{
+			000,001,001,001,002,002,002,003,003,003,
+			004,004,005,005,005,006,007,007,007,007,
+			008,008,009,009,009,010,010,010,011,012,
+			012,012,012,013,013,014,014,015,015,015,
+			016,016,016,017,017,017,018,018,019,019,
+			020,020,020,021,021,021,022,022,023,023,
+			023,024,024,024,025,025,026,026,026,027,
+			027,028,028,028,029,030,030,030,030,031,
+			031,031,032,033,033,033,033,034,035,035,
+			035,035,036,036,037,037,038,038,038,038,
+			039,039,040,040,041,041,041,042,042,043,
+			043,043,044,044,044,045,045,046,046,046,
+			047,047,047,048,048,049,049,049,050,050,
+			051,051,051,052,053,053,053,053,054,054,
+			055,055,056,056,056,057,057,057,058,058,
+			059,060,060,060,060,061,061,062,062,063,
+			063,063,064,065,065,065,066,067,067,067,
+			068,068,069,069,070,070,071,071,072,072,
+			073,073,074,074,075,075,076,076,077,078,
+			078,079,079,080,081,081,082,083,083,084,
+			085,086,086,087,087,088,089,090,090,091,
+			092,093,094,095,096,096,097,098,099,100,
+			101,102,104,105,106,107,108,109,111,112,
+			114,115,116,118,120,122,123,125,127,129,
+			131,133,136,139,141,145,148,152,156,161,
+			167,175,183,195,214,255,        
+		};
+
+
+		static readonly byte[] _positiveArray = new byte[]
+		{
+			000,003,005,008,010,013,015,018,020,023,
+			026,028,030,033,036,039,041,044,046,049,
+			051,054,057,059,062,064,067,069,072,074,
+			077,080,082,084,087,090,093,095,098,100,
+			103,105,108,111,113,116,118,121,124,126,
+			128,131,134,136,138,141,144,146,148,151,
+			153,155,157,160,162,164,167,169,171,173,
+			175,177,179,181,183,184,186,188,190,191,
+			193,195,196,197,199,201,202,203,204,206,
+			207,209,210,211,212,213,214,216,217,218,
+			219,220,221,222,222,223,224,225,226,226,
+			227,228,229,229,230,231,232,232,233,234,
+			234,234,235,236,237,237,238,238,239,239,
+			239,240,240,241,241,242,242,242,242,243,
+			244,244,244,244,245,245,245,246,246,246,
+			247,247,247,247,247,247,248,248,248,248,
+			249,249,249,249,250,250,250,250,250,250,
+			250,251,251,251,251,251,251,251,251,252,
+			252,252,252,252,252,252,252,252,252,253,
+			253,253,253,253,253,253,253,253,253,253,
+			253,253,253,253,254,254,254,254,254,254,
+			254,254,254,254,254,254,254,254,254,254,
+			254,254,254,254,254,254,254,254,254,254,
+			254,255,255,255,255,255,255,255,255,255,
+			255,255,255,255,255,255,255,255,255,255,
+			255,255,255,255,255,255,
+		};
+
+		static readonly List<byte[]> brightArray = new List<byte[]> {
 					new byte[]{0, 0, 0, 0, 0, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 17, 17, 18, 19, 19, 20, 21, 21, 22, 23, 24, 26, 26, 27, 28, 29, 30, 30, 32, 34, 34, 35, 36, 37, 38, 38, 40, 40, 41, 41, 42, 43, 44, 44, 45, 45, 46, 47, 48, 49, 49, 50, 51, 51, 52, 52, 53, 54, 54, 55, 56, 56, 57, 57, 58, 59, 59, 60, 61, 62, 62, 63, 63, 64, 65, 65, 66, 67, 67, 68, 69, 69, 70, 71, 71, 72, 73, 73, 74, 75, 75, 76, 77, 77, 78, 79, 79, 80, 81, 81, 82, 83, 83, 84, 84, 85, 86, 86, 87, 88, 89, 90, 90, 91, 92, 92, 93, 94, 94, 95, 95, 96, 97, 97, 98, 99, 99, 100, 101, 101, 102, 103, 103, 104, 105, 105, 106, 107, 107, 108, 109, 109, 110, 110, 111, 112, 113, 113, 114, 115, 115, 116, 117, 117, 118, 119, 119, 120, 120, 121, 122, 123, 123, 124, 125, 125, 126, 127, 127, 128, 129, 129, 130, 131, 131, 132, 133, 133, 134, 135, 135, 136, 137, 137, 138, 139, 139, 140, 141, 141, 142, 143, 143, 144, 145, 145, 146, 147, 147, 148, 149, 150, 150, 151, 151, 152, 153, 154, 154, 155, 156, 156, 157, 158, 158, 159, 159, 160, 161, 161, 162, 163, 163, 164, 165, 165, 166, 167, 167, 168, 169, 169, 170, 170}, 
 					new byte[]{0, 0, 0, 0, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 15, 15, 16, 17, 18, 18, 19, 20, 20, 20, 22, 21, 23, 23, 24, 26, 26, 27, 28, 29, 30, 31, 32, 34, 34, 35, 36, 37, 38, 39, 40, 40, 41, 41, 42, 43, 44, 44, 45, 46, 46, 47, 48, 49, 49, 50, 51, 51, 52, 52, 53, 54, 54, 55, 56, 56, 57, 57, 58, 59, 60, 61, 61, 62, 62, 63, 64, 64, 65, 66, 66, 67, 68, 68, 69, 70, 70, 71, 72, 72, 73, 74, 74, 75, 76, 76, 77, 78, 78, 79, 80, 80, 81, 82, 82, 83, 84, 84, 85, 86, 86, 87, 88, 88, 89, 90, 91, 91, 92, 93, 93, 94, 94, 95, 96, 97, 97, 98, 98, 99, 100, 100, 101, 102, 103, 103, 104, 105, 105, 106, 106, 107, 108, 109, 109, 110, 110, 111, 112, 112, 113, 114, 114, 115, 116, 116, 117, 118, 118, 119, 120, 120, 121, 122, 122, 123, 124, 124, 125, 126, 126, 127, 128, 128, 129, 130, 130, 131, 132, 133, 133, 134, 134, 135, 136, 137, 137, 138, 139, 139, 140, 141, 141, 142, 143, 143, 144, 145, 145, 146, 147, 147, 148, 149, 149, 150, 151, 152, 152, 153, 153, 154, 155, 156, 156, 157, 158, 159, 159, 160, 160, 161, 162, 162, 163, 163, 164, 165, 165, 166, 167, 167, 168, 169, 169, 170, 171, 171}, 
 					new byte[]{0, 0, 0, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10, 11, 11, 11, 12, 12, 13, 13, 14, 15, 15, 16, 17, 18, 18, 19, 20, 20, 21, 22, 22, 23, 24, 24, 26, 26, 27, 28, 29, 30, 31, 32, 34, 34, 35, 36, 37, 38, 39, 39, 40, 41, 41, 42, 43, 44, 44, 45, 46, 46, 47, 48, 49, 49, 50, 51, 52, 52, 53, 54, 55, 55, 56, 56, 57, 57, 58, 59, 59, 60, 61, 61, 62, 63, 63, 64, 65, 65, 66, 67, 67, 68, 69, 69, 70, 71, 71, 72, 72, 73, 74, 75, 75, 76, 77, 77, 78, 79, 79, 80, 81, 81, 82, 83, 83, 84, 85, 85, 86, 87, 87, 88, 89, 90, 90, 91, 92, 92, 93, 94, 94, 95, 96, 96, 97, 98, 98, 99, 100, 100, 101, 102, 102, 103, 104, 104, 105, 106, 106, 107, 108, 108, 109, 110, 110, 111, 112, 112, 113, 114, 114, 115, 116, 116, 117, 118, 119, 119, 120, 121, 121, 122, 123, 123, 124, 125, 125, 126, 126, 127, 128, 128, 129, 130, 130, 131, 132, 132, 133, 134, 134, 135, 136, 137, 137, 138, 139, 139, 140, 140, 141, 142, 143, 143, 144, 145, 145, 146, 147, 147, 148, 149, 149, 150, 151, 151, 152, 153, 154, 154, 155, 156, 156, 157, 158, 158, 159, 160, 160, 161, 162, 162, 163, 164, 164, 165, 166, 166, 167, 168, 168, 169, 170, 170, 171, 172, 172}, 
@@ -278,7 +335,6 @@ namespace ImageProcessing
 
 		#endregion
 
-
 	
 		//	PUBLIC METHODS
 		#region public methods
@@ -396,6 +452,42 @@ namespace ImageProcessing
 		}
 		#endregion
 
+		#region GetBitmapV2()
+		/// <summary>
+		/// Photoshop algorithm.
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="brightness">From -1 to +1</param>
+		/// <returns></returns>
+		public static Bitmap GetBitmapV2(Bitmap bitmap, double brightness)
+		{
+			try
+			{
+				switch (bitmap.PixelFormat)
+				{
+					case PixelFormat.Format8bppIndexed:
+						{
+							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
+								return GetInternalV2(bitmap, brightness);
+							else
+								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
+						}
+					case PixelFormat.Format24bppRgb:
+					case PixelFormat.Format32bppArgb:
+					case PixelFormat.Format32bppRgb:
+					case PixelFormat.Format32bppPArgb:
+						return GetInternalV2(bitmap, brightness);
+					default:
+						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("Brightness, GetBitmapV2(): " + ex.Message, ex);
+			}
+		}
+		#endregion
+
 		#region GoS2N()
 		/// <summary>
 		/// 
@@ -456,6 +548,67 @@ namespace ImageProcessing
 #endif
 			}
 		}
+		#endregion
+
+		#region GoV2()
+		/// <summary>
+		/// Similar to Photoshop brightness.
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="brightness">interval <-1, 1></param>
+		public static void GoV2(Bitmap bitmap, double brightness)
+		{
+			GoV2(bitmap, Rectangle.Empty, brightness);
+		}
+
+		public static void GoV2(Bitmap bitmap, Rectangle clip, double brightness)
+		{
+#if DEBUG
+			DateTime start = DateTime.Now;
+#endif
+
+			try
+			{
+				int b = Convert.ToInt32(brightness * 256);
+
+				if(clip.IsEmpty)
+					clip = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+				else
+					clip.Intersect(new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+
+				switch (bitmap.PixelFormat)
+				{
+					case PixelFormat.Format1bppIndexed:
+						{
+						} break;
+					case PixelFormat.Format8bppIndexed:
+						{
+							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
+								GoInternalV2(bitmap, clip, b);
+							else
+								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
+						} break;
+					case PixelFormat.Format24bppRgb:
+					case PixelFormat.Format32bppArgb:
+					case PixelFormat.Format32bppRgb:
+					case PixelFormat.Format32bppPArgb:
+						GoInternalV2(bitmap, clip, b);
+						break;
+					default:
+						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("Brightness, Go(): " + ex.Message);
+			}
+			finally
+			{
+#if DEBUG
+				Console.WriteLine("Brightness Go():" + (DateTime.Now.Subtract(start)).ToString());
+#endif
+			}
+		}	
 		#endregion
 
 		#region GetBitmapS2N()
@@ -554,7 +707,7 @@ namespace ImageProcessing
 								{
 									pCurrent[x * 4] = (byte)((pCurrent[x * 4] + brightness > 255) ? 255 : (pCurrent[x * 4] + brightness));
 									pCurrent[x * 4 + 1] = (byte) ((pCurrent[x * 4 + 1] + brightness > 255) ? 255 : (pCurrent[x * 4 + 1] + brightness));
-									pCurrent[x * 4 + 2] = (byte)((pCurrent[x * 4 + 1] + brightness > 255) ? 255 : (pCurrent[x * 4 + 2] + brightness));
+									pCurrent[x * 4 + 2] = (byte)((pCurrent[x * 4 + 2] + brightness > 255) ? 255 : (pCurrent[x * 4 + 2] + brightness));
 								}
 							}
 						}
@@ -581,7 +734,7 @@ namespace ImageProcessing
 								{
 									pCurrent[x * 4] = (byte)((pCurrent[x * 4] + brightness < 0) ? 0 : (pCurrent[x * 4] + brightness));
 									pCurrent[x * 4 + 1] = (byte)((pCurrent[x * 4 + 1] + brightness < 0) ? 0 : (pCurrent[x * 4 + 1] + brightness));
-									pCurrent[x * 4 + 2] = (byte)((pCurrent[x * 4 + 1] + brightness < 0) ? 0 : (pCurrent[x * 4 + 2] + brightness));
+									pCurrent[x * 4 + 2] = (byte)((pCurrent[x * 4 + 2] + brightness < 0) ? 0 : (pCurrent[x * 4 + 2] + brightness));
 								}
 							}
 						}
@@ -647,7 +800,7 @@ namespace ImageProcessing
 								{
 									pCurrentR[x * 4] = (byte)((pCurrentS[x * 4] + brightness > 255) ? 255 : (pCurrentS[x * 4] + brightness));
 									pCurrentR[x * 4 + 1] = (byte)((pCurrentS[x * 4 + 1] + brightness > 255) ? 255 : (pCurrentS[x * 4 + 1] + brightness));
-									pCurrentR[x * 4 + 2] = (byte)((pCurrentS[x * 4 + 1] + brightness > 255) ? 255 : (pCurrentS[x * 4 + 2] + brightness));
+									pCurrentR[x * 4 + 2] = (byte)((pCurrentS[x * 4 + 2] + brightness > 255) ? 255 : (pCurrentS[x * 4 + 2] + brightness));
 									pCurrentR[x * 4 + 3] = pCurrentS[x * 4 + 3];
 								}
 							}
@@ -666,19 +819,23 @@ namespace ImageProcessing
 					}
 					else
 					{
-						for (y = height - 1; y >= 0; y--)
+						if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppPArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb)
 						{
-							pCurrentS = pSource + (y * strideS);
-							pCurrentR = pResult + (y * strideR);
-
-							for (x = width - 1; x >= 0; x--)
+							for (y = height - 1; y >= 0; y--)
 							{
-								pCurrentR[x * 4] = (byte)((pCurrentS[x * 4] + brightness < 0) ? 0 : (pCurrentS[x * 4] + brightness));
-								pCurrentR[x * 4 + 1] = (byte)((pCurrentS[x * 4 + 1] + brightness < 0) ? 0 : (pCurrentS[x * 4 + 1] + brightness));
-								pCurrentR[x * 4 + 2] = (byte)((pCurrentS[x * 4 + 1] + brightness < 0) ? 0 : (pCurrentS[x * 4 + 2] + brightness));
-								pCurrentR[x * 4 + 3] = pCurrentS[x * 4 + 3];
+								pCurrentS = pSource + (y * strideS);
+								pCurrentR = pResult + (y * strideR);
+
+								for (x = width - 1; x >= 0; x--)
+								{
+									pCurrentR[x * 4] = (byte)((pCurrentS[x * 4] + brightness < 0) ? 0 : (pCurrentS[x * 4] + brightness));
+									pCurrentR[x * 4 + 1] = (byte)((pCurrentS[x * 4 + 1] + brightness < 0) ? 0 : (pCurrentS[x * 4 + 1] + brightness));
+									pCurrentR[x * 4 + 2] = (byte)((pCurrentS[x * 4 + 2] + brightness < 0) ? 0 : (pCurrentS[x * 4 + 2] + brightness));
+									pCurrentR[x * 4 + 3] = pCurrentS[x * 4 + 3];
+								}
 							}
 						}
+						else
 						{
 							for (y = height - 1; y >= 0; y--)
 							{
@@ -793,8 +950,179 @@ namespace ImageProcessing
 		}
 		#endregion
 
+		#region GoInternalV2()
+		private static void GoInternalV2(Bitmap bitmap, Rectangle clip, int brightness)
+		{
+			BitmapData bitmapData = null;
+
+			try
+			{
+				bitmapData = bitmap.LockBits(clip, ImageLockMode.ReadWrite, bitmap.PixelFormat);
+				int sStride = bitmapData.Stride;
+
+				unsafe
+				{
+					byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+					byte* pCurrent;
+
+					int width = bitmapData.Width;
+					int height = bitmapData.Height;
+
+					byte[] array = GetArray(brightness);
+
+					if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppPArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb)
+					{
+						for (int y = height - 1; y >= 0; y--)
+						{
+							pCurrent = pSource + y * sStride;
+
+							for (int x = width - 1; x >= 0; x--)
+							{
+								pCurrent[x * 4] = array[pCurrent[x * 4]];
+								pCurrent[x * 4 + 1] = array[pCurrent[x * 4 + 1]];
+								pCurrent[x * 4 + 2] = array[pCurrent[x * 4 + 2]];
+							}
+						}
+					}
+					else
+					{
+						for (int y = height - 1; y >= 0; y--)
+						{
+							pCurrent = pSource + y * sStride;
+
+							for (int x = sStride - 1; x >= 0; x--)
+								pCurrent[x] = array[pCurrent[x]];
+						}
+					}
+				}
+			}
+			finally
+			{
+				if (bitmapData != null)
+					bitmap.UnlockBits(bitmapData);
+			}
+		}
 		#endregion
 
-	
+		#region GetInternalV2()
+		private static Bitmap GetInternalV2(Bitmap bitmap, double brightness)
+		{
+			Bitmap result = null;
+			BitmapData bitmapData = null;
+			BitmapData resultData = null;
+
+			try
+			{
+				int width = bitmap.Width;
+				int height = bitmap.Height;
+
+				byte[] array = GetArray(brightness);
+
+				result = new Bitmap(width, height, bitmap.PixelFormat);
+				bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+				resultData = result.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+				int strideS = bitmapData.Stride;
+				int strideR = resultData.Stride;
+				int stride = (strideS < strideR) ? strideS : strideR;
+
+				unsafe
+				{
+					byte* pSource = (byte*)bitmapData.Scan0.ToPointer();
+					byte* pResult = (byte*)resultData.Scan0.ToPointer();
+					byte* pCurrentS, pCurrentR;
+
+					int x, y;
+
+					if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppPArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb)
+					{
+						for (y = height - 1; y >= 0; y--)
+						{
+							pCurrentS = pSource + (y * strideS);
+							pCurrentR = pResult + (y * strideR);
+
+							for (x = width - 1; x >= 0; x--)
+							{
+								pCurrentR[x * 4] = array[pCurrentS[x * 4]];
+								pCurrentR[x * 4 + 1] = array[pCurrentS[x * 4 + 1]];
+								pCurrentR[x * 4 + 2] = array[pCurrentS[x * 4 + 2]];
+								pCurrentR[x * 4 + 3] = pCurrentS[x * 4 + 3];
+							}
+						}
+					}
+					else
+					{
+						for (y = height - 1; y >= 0; y--)
+						{
+							pCurrentS = pSource + (y * strideS);
+							pCurrentR = pResult + (y * strideR);
+
+							for (x = stride - 1; x >= 0; x--)
+								pCurrentR[x] = array[pCurrentS[x]];
+						}
+					}
+				}
+
+				return result;
+			}
+			finally
+			{
+				if (bitmapData != null)
+					bitmap.UnlockBits(bitmapData);
+				if (resultData != null)
+					result.UnlockBits(resultData);
+			}
+		}
+		#endregion
+
+		#region GetArray()
+		private static byte[] GetArray(double brightness)
+		{
+			brightness = Math.Max(-1, Math.Min(1, brightness));
+
+			if (brightness < 0)
+			{
+				if (brightness == -1)
+					return _negativeArray;
+				else
+				{
+					byte[] newArray = (byte[])_negativeArray.Clone();
+
+					if (brightness > -1)
+						for (int i = 0; i < 256; i++)
+							newArray[i] = Convert.ToByte(i + (i - newArray[i]) * brightness);
+
+					return newArray;
+				}
+			}
+			else if (brightness > 0)
+			{
+				if (brightness == 1)
+					return _positiveArray;
+				else
+				{
+					byte[] newArray = (byte[])_positiveArray.Clone();
+
+					if (brightness < 1)
+						for (int i = 0; i < 256; i++)
+							newArray[i] = Convert.ToByte(i + (newArray[i] - i) * brightness);
+
+					return newArray;
+				}
+			}
+			else
+			{
+				byte[] array = new byte[256];
+
+				for (byte i = 0; i <= 255; i++)
+					array[i] = i;
+
+				return array;
+			}
+		}
+		#endregion
+
+		#endregion
+
 	}
 }

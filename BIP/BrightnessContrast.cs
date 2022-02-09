@@ -127,6 +127,56 @@ namespace ImageProcessing
 		}
 		#endregion
 
+		#region GoV2()
+		/// <summary>
+		/// Similar to Photoshop algorithm.
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="brightness"></param>
+		/// <param name="contrast"></param>
+		public static void GoV2(Bitmap bitmap, double brightness, double contrast)
+		{
+			if (brightness != 0)
+				ImageProcessing.Brightness.GoV2(bitmap, brightness);
+
+			if (contrast != 0)
+				ImageProcessing.Contrast.GoV2(bitmap, contrast);
+		}
+		#endregion
+
+		#region GetBitmapV2()
+		/// <summary>
+		/// Similar to Photoshop algorithm.
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="brightness"></param>
+		/// <param name="contrast"></param>
+		/// <returns></returns>
+		public static Bitmap GetBitmapV2(Bitmap bitmap, double brightness, double contrast)
+		{
+			try
+			{
+				if (brightness != 0)
+				{
+					Bitmap b = ImageProcessing.Brightness.GetBitmapV2(bitmap, brightness);
+
+					if (contrast != 0)
+						ImageProcessing.Contrast.GoV2(b, contrast);
+
+					return b;
+				}
+				else if (contrast != 0)
+					return ImageProcessing.Contrast.GetBitmapV2(bitmap, brightness);
+				else
+					return ImageCopier.Copy(bitmap);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("BrightnessContrast, GetBitmapV2(): " + ex.Message, ex);
+			}
+		}
+		#endregion
+
 		#endregion
 
 
