@@ -21,6 +21,7 @@ namespace ImageProcessing.BigImages
 		}
 		#endregion
 
+		
 		//PUBLIC METHODS
 		#region public methods
 
@@ -169,6 +170,7 @@ namespace ImageProcessing.BigImages
 		#endregion
 
 		#endregion
+
 
 		//PRIVATE METHODS
 		#region private methods
