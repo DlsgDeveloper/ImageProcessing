@@ -1,9 +1,6 @@
 using System;
-using System.Drawing ;
-using System.Drawing.Imaging ;
-using System.Collections;
-using System.IO;
-using System.Runtime.InteropServices;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 
 namespace ImageProcessing
@@ -18,24 +15,29 @@ namespace ImageProcessing
 
 		#region Go()
 		/// <summary>
-		/// histogram mean is computed
+		/// Similar to Photoshop algorithm.
 		/// </summary>
 		/// <param name="bitmap"></param>
 		/// <param name="brightness"></param>
 		/// <param name="contrast"></param>
 		public static void Go(Bitmap bitmap, double brightness, double contrast)
 		{
-			ImageProcessing.ColorD histogramMean = Histogram.GetHistogramMean(bitmap);
+			if (brightness != 0)
+				ImageProcessing.Brightness.Go(bitmap, brightness);
 
-			Go(bitmap, brightness, contrast, histogramMean);
+			if (contrast != 0)
+				ImageProcessing.Contrast.Go(bitmap, contrast);
 		}
 
+		/// <summary>
+		/// Old method, will be deprectated. 
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="brightness"></param>
+		/// <param name="contrast"></param>
+		/// <param name="histogramMean"></param>
 		public static void Go(Bitmap bitmap, double brightness, double contrast, ColorD histogramMean)
 		{
-#if DEBUG
-			DateTime start = DateTime.Now;
-#endif
-
 			try
 			{
 				switch (bitmap.PixelFormat)
@@ -63,18 +65,12 @@ namespace ImageProcessing
 			{
 				throw new Exception("BrightnessContrast, Go(): " + ex.Message);
 			}
-			finally
-			{
-#if DEBUG
-				Console.WriteLine("BrightnessContrast Go():" + (DateTime.Now.Subtract(start)).ToString());
-#endif
-			}
 		}
 		#endregion
 
 		#region GetBitmap()
 		/// <summary>
-		/// histogram mean is computed
+		/// Similar to Photoshop algorithm.
 		/// </summary>
 		/// <param name="bitmap"></param>
 		/// <param name="brightness"></param>
@@ -82,17 +78,38 @@ namespace ImageProcessing
 		/// <returns></returns>
 		public static Bitmap GetBitmap(Bitmap bitmap, double brightness, double contrast)
 		{
-			ImageProcessing.ColorD histogramMean = Histogram.GetHistogramMean(bitmap);
+			try
+			{
+				if (brightness != 0)
+				{
+					Bitmap b = ImageProcessing.Brightness.GetBitmap(bitmap, brightness);
 
-			return GetBitmap(bitmap, brightness, contrast, histogramMean);
+					if (contrast != 0)
+						ImageProcessing.Contrast.Go(b, contrast);
+
+					return b;
+				}
+				else if (contrast != 0)
+					return ImageProcessing.Contrast.GetBitmap(bitmap, brightness);
+				else
+					return ImageCopier.Copy(bitmap);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("BrightnessContrast, GetBitmapV2(): " + ex.Message, ex);
+			}
 		}
 
+		/// <summary>
+		/// Old method, will be deprectated. 
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="brightness"></param>
+		/// <param name="contrast"></param>
+		/// <param name="histogramMean"></param>
+		/// <returns></returns>
 		public static Bitmap GetBitmap(Bitmap bitmap, double brightness, double contrast, ColorD histogramMean)
 		{
-#if DEBUG
-			DateTime start = DateTime.Now;
-#endif
-
 			try
 			{
 				switch (bitmap.PixelFormat)
@@ -117,62 +134,6 @@ namespace ImageProcessing
 			catch (Exception ex)
 			{
 				throw new Exception("BrightnessContrast, GetBitmap(): " + ex.Message);
-			}
-			finally
-			{
-#if DEBUG
-				Console.WriteLine("BrightnessContrast GetBitmap():" + (DateTime.Now.Subtract(start)).ToString());
-#endif
-			}
-		}
-		#endregion
-
-		#region GoV2()
-		/// <summary>
-		/// Similar to Photoshop algorithm.
-		/// </summary>
-		/// <param name="bitmap"></param>
-		/// <param name="brightness"></param>
-		/// <param name="contrast"></param>
-		public static void GoV2(Bitmap bitmap, double brightness, double contrast)
-		{
-			if (brightness != 0)
-				ImageProcessing.Brightness.GoV2(bitmap, brightness);
-
-			if (contrast != 0)
-				ImageProcessing.Contrast.GoV2(bitmap, contrast);
-		}
-		#endregion
-
-		#region GetBitmapV2()
-		/// <summary>
-		/// Similar to Photoshop algorithm.
-		/// </summary>
-		/// <param name="bitmap"></param>
-		/// <param name="brightness"></param>
-		/// <param name="contrast"></param>
-		/// <returns></returns>
-		public static Bitmap GetBitmapV2(Bitmap bitmap, double brightness, double contrast)
-		{
-			try
-			{
-				if (brightness != 0)
-				{
-					Bitmap b = ImageProcessing.Brightness.GetBitmapV2(bitmap, brightness);
-
-					if (contrast != 0)
-						ImageProcessing.Contrast.GoV2(b, contrast);
-
-					return b;
-				}
-				else if (contrast != 0)
-					return ImageProcessing.Contrast.GetBitmapV2(bitmap, brightness);
-				else
-					return ImageCopier.Copy(bitmap);
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("BrightnessContrast, GetBitmapV2(): " + ex.Message, ex);
 			}
 		}
 		#endregion

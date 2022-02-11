@@ -68,7 +68,7 @@ namespace TestApp
 			
 			try
 			{
-				TestApp.SharpeningTest.Go();
+				TestApp.BrightnessContrastTest.Go();
 				//TestApp.PixelsComparer.Go();
 			}
 			catch (Exception ex)

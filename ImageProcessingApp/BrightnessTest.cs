@@ -17,17 +17,28 @@ namespace TestApp
 
 			for (int i = 0; i < sourceFiles.Length; i++)
 			{
-				if (sourceFiles[i].Name == "00.jpg")
+				//if (sourceFiles[i].Name == "00.jpg")
 				{
 					using (Bitmap b = new Bitmap(sourceFiles[i].FullName))
 					{
 						DateTime start = DateTime.Now;
-						//Bitmap result = ImageProcessing.Brightness.GetBitmapV2(b, .03);
-						ImageProcessing.Brightness.GoV2(b, .03);
 
-						Console.WriteLine("BrightnessTest.GetBitmap(): " + DateTime.Now.Subtract(start).ToString());
+						
+						ImageProcessing.Brightness.Go(b, new Rectangle(100, 100, b.Width / 2 - 200, b.Height - 200), 0.5);
+						ImageProcessing.Brightness.Go(b, new Rectangle(b.Width / 2 + 100, 100, b.Width / 2 - 200, b.Height - 200), 0.2);
+
+						Console.WriteLine("BrightnessTest.Go(): " + DateTime.Now.Subtract(start).ToString());
 
 						b.Save(Path.Combine(resultDir.FullName, Path.GetFileNameWithoutExtension(sourceFiles[i].Name) + ".png"), ImageFormat.Png);
+						
+						/*
+						Bitmap result = ImageProcessing.Brightness.GetBitmap(b, new Rectangle(100, 100, b.Width / 2 - 200, b.Height - 200), 0.3);
+						ImageProcessing.Brightness.Go(result, new Rectangle(100, 100, result.Width / 2 - 200, result.Height - 200), 0.3);
+
+						Console.WriteLine("BrightnessTest.Go(): " + DateTime.Now.Subtract(start).ToString());
+
+						result.Save(Path.Combine(resultDir.FullName, Path.GetFileNameWithoutExtension(sourceFiles[i].Name) + ".png"), ImageFormat.Png);
+						*/
 					}
 				}
 			}

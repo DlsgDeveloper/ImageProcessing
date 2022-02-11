@@ -335,31 +335,33 @@ namespace ImageProcessing
 
 		#endregion
 
-	
+
 		//	PUBLIC METHODS
 		#region public methods
 
 		#region Go()
 		/// <summary>
-		/// bitghtness is in interval <-1, 1>. -1 makes image black, +1 makes image white.
+		/// Bitghtness is in interval <-1, 1>. 
 		/// </summary>
 		/// <param name="bitmap"></param>
 		/// <param name="brightness"></param>
-		public static void Go(Bitmap bitmap, double brightness)
+		/// <param name="useOldAlgorithm">True to use old algorithm that just raises brightness in every pixel evenly.</param>
+		public static void Go(Bitmap bitmap, double brightness, bool useOldAlgorithm = false)
 		{
-			Go(bitmap, Rectangle.Empty, brightness);
+			Go(bitmap, Rectangle.Empty, brightness, useOldAlgorithm);
 		}
 
-		public static void Go(Bitmap bitmap, Rectangle clip, double brightness)
+		/// <summary>
+		/// Bitghtness is in interval <-1, 1>. 
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="clip"></param>
+		/// <param name="brightness"></param>
+		/// <param name="useOldAlgorithm">True to use old algorithm that just raises brightness in every pixel evenly.</param>
+		public static void Go(Bitmap bitmap, Rectangle clip, double brightness, bool useOldAlgorithm = false)
 		{
-#if DEBUG
-			DateTime start = DateTime.Now;
-#endif
-
 			try
 			{
-				int b = Convert.ToInt32(brightness * 256);
-
 				if(clip.IsEmpty)
 					clip = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 				else
@@ -373,7 +375,12 @@ namespace ImageProcessing
 					case PixelFormat.Format8bppIndexed:
 						{
 							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
-								GoInternal(bitmap, clip, b);
+							{
+								if(useOldAlgorithm)
+									GoInternal(bitmap, clip, Convert.ToInt32(brightness * 256));
+								else
+									GoInternalV2(bitmap, clip, brightness);
+							}
 							else
 								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
 						} break;
@@ -381,7 +388,10 @@ namespace ImageProcessing
 					case PixelFormat.Format32bppArgb:
 					case PixelFormat.Format32bppRgb:
 					case PixelFormat.Format32bppPArgb:
-						GoInternal(bitmap, clip, b);
+						if (useOldAlgorithm)
+							GoInternal(bitmap, clip, Convert.ToInt32(brightness * 256));
+						else
+							GoInternalV2(bitmap, clip, brightness);
 						break;
 					default:
 						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
@@ -391,27 +401,17 @@ namespace ImageProcessing
 			{
 				throw new Exception("Brightness, Go(): " + ex.Message);
 			}
-			finally
-			{
-#if DEBUG
-				Console.WriteLine("Brightness Go():" + (DateTime.Now.Subtract(start)).ToString());
-#endif
-			}
 		}	
 		#endregion
 
 		#region GetBitmap()
-		public static Bitmap GetBitmap(Bitmap bitmap, double brightness)
+		public static Bitmap GetBitmap(Bitmap bitmap, double brightness, bool useOldAlgorithm = false)
 		{
-			return GetBitmap(bitmap, Rectangle.Empty, brightness);
+			return GetBitmap(bitmap, Rectangle.Empty, brightness, useOldAlgorithm);
 		}
 
-		public static Bitmap GetBitmap(Bitmap bitmap, Rectangle clip, double brightness)
+		public static Bitmap GetBitmap(Bitmap bitmap, Rectangle clip, double brightness, bool useOldAlgorithm = false)
 		{
-#if DEBUG
-			DateTime start = DateTime.Now;
-#endif
-
 			if (clip.IsEmpty)
 				clip = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			else
@@ -419,14 +419,17 @@ namespace ImageProcessing
 
 			try
 			{
-				int b = Convert.ToInt32(brightness * 255);
-
 				switch (bitmap.PixelFormat)
 				{
 					case PixelFormat.Format8bppIndexed:
 						{
 							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
-								return GetInternal(bitmap, clip, b);
+							{
+								if (useOldAlgorithm)
+									return GetInternal(bitmap, clip, Convert.ToInt32(brightness * 255));
+								else
+									return GetInternalV2(bitmap, clip, brightness);
+							}
 							else
 								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
 						}
@@ -434,7 +437,10 @@ namespace ImageProcessing
 					case PixelFormat.Format32bppArgb:
 					case PixelFormat.Format32bppRgb:
 					case PixelFormat.Format32bppPArgb:
-						return GetInternal(bitmap, clip, b);
+						if (useOldAlgorithm)
+							return GetInternal(bitmap, clip, Convert.ToInt32(brightness * 255));
+						else
+							return GetInternalV2(bitmap, clip, brightness);
 					default:
 						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
 				}
@@ -442,48 +448,6 @@ namespace ImageProcessing
 			catch(Exception ex)
 			{
 				throw new Exception("Brightness, GetBitmap(): " + ex.Message);
-			}
-			finally
-			{
-#if DEBUG
-				Console.WriteLine("Brightness GetBitmap():" + (DateTime.Now.Subtract(start)).ToString());
-#endif
-			}
-		}
-		#endregion
-
-		#region GetBitmapV2()
-		/// <summary>
-		/// Photoshop algorithm.
-		/// </summary>
-		/// <param name="bitmap"></param>
-		/// <param name="brightness">From -1 to +1</param>
-		/// <returns></returns>
-		public static Bitmap GetBitmapV2(Bitmap bitmap, double brightness)
-		{
-			try
-			{
-				switch (bitmap.PixelFormat)
-				{
-					case PixelFormat.Format8bppIndexed:
-						{
-							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
-								return GetInternalV2(bitmap, brightness);
-							else
-								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
-						}
-					case PixelFormat.Format24bppRgb:
-					case PixelFormat.Format32bppArgb:
-					case PixelFormat.Format32bppRgb:
-					case PixelFormat.Format32bppPArgb:
-						return GetInternalV2(bitmap, brightness);
-					default:
-						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
-				}
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("Brightness, GetBitmapV2(): " + ex.Message, ex);
 			}
 		}
 		#endregion
@@ -548,65 +512,6 @@ namespace ImageProcessing
 #endif
 			}
 		}
-		#endregion
-
-		#region GoV2()
-		/// <summary>
-		/// Similar to Photoshop brightness.
-		/// </summary>
-		/// <param name="bitmap"></param>
-		/// <param name="brightness">interval <-1, 1></param>
-		public static void GoV2(Bitmap bitmap, double brightness)
-		{
-			GoV2(bitmap, Rectangle.Empty, brightness);
-		}
-
-		public static void GoV2(Bitmap bitmap, Rectangle clip, double brightness)
-		{
-#if DEBUG
-			DateTime start = DateTime.Now;
-#endif
-
-			try
-			{
-				if(clip.IsEmpty)
-					clip = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-				else
-					clip.Intersect(new Rectangle(0, 0, bitmap.Width, bitmap.Height));
-
-				switch (bitmap.PixelFormat)
-				{
-					case PixelFormat.Format1bppIndexed:
-						{
-						} break;
-					case PixelFormat.Format8bppIndexed:
-						{
-							if (Misc.IsPaletteGrayscale(bitmap.Palette.Entries))
-								GoInternalV2(bitmap, clip, brightness);
-							else
-								throw new IpException(ErrorCode.ErrorUnsupportedFormat);
-						} break;
-					case PixelFormat.Format24bppRgb:
-					case PixelFormat.Format32bppArgb:
-					case PixelFormat.Format32bppRgb:
-					case PixelFormat.Format32bppPArgb:
-						GoInternalV2(bitmap, clip, brightness);
-						break;
-					default:
-						throw new IpException(ErrorCode.ErrorUnsupportedFormat);
-				}
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("Brightness, Go(): " + ex.Message);
-			}
-			finally
-			{
-#if DEBUG
-				Console.WriteLine("Brightness Go():" + (DateTime.Now.Subtract(start)).ToString());
-#endif
-			}
-		}	
 		#endregion
 
 		#region GetBitmapS2N()
@@ -970,11 +875,11 @@ namespace ImageProcessing
 
 					if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppPArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb)
 					{
-						for (int y = height - 1; y >= 0; y--)
+						for (int y = 0; y < height; y++)
 						{
 							pCurrent = pSource + y * sStride;
 
-							for (int x = width - 1; x >= 0; x--)
+							for (int x = 0; x < width; x++)
 							{
 								pCurrent[x * 4] = array[pCurrent[x * 4]];
 								pCurrent[x * 4 + 1] = array[pCurrent[x * 4 + 1]];
@@ -982,13 +887,27 @@ namespace ImageProcessing
 							}
 						}
 					}
-					else
+					else if (bitmap.PixelFormat == PixelFormat.Format24bppRgb)
 					{
-						for (int y = height - 1; y >= 0; y--)
+						for (int y = 0; y < height; y++)
 						{
 							pCurrent = pSource + y * sStride;
 
-							for (int x = sStride - 1; x >= 0; x--)
+							for (int x = 0; x < width; x++)
+							{
+								pCurrent[x * 3] = array[pCurrent[x * 3]];
+								pCurrent[x * 3 + 1] = array[pCurrent[x * 3 + 1]];
+								pCurrent[x * 3 + 2] = array[pCurrent[x * 3 + 2]];
+							}
+						}
+					}
+					else
+					{
+						for (int y = 0; y < height; y++)
+						{
+							pCurrent = pSource + y * sStride;
+
+							for (int x = 0; x < width; x++)
 								pCurrent[x] = array[pCurrent[x]];
 						}
 					}
@@ -1003,7 +922,7 @@ namespace ImageProcessing
 		#endregion
 
 		#region GetInternalV2()
-		private static Bitmap GetInternalV2(Bitmap bitmap, double brightness)
+		private static Bitmap GetInternalV2(Bitmap bitmap, Rectangle clip, double brightness)
 		{
 			Bitmap result = null;
 			BitmapData bitmapData = null;
@@ -1011,13 +930,14 @@ namespace ImageProcessing
 
 			try
 			{
-				int width = bitmap.Width;
-				int height = bitmap.Height;
+				bitmapData = bitmap.LockBits(clip, ImageLockMode.ReadOnly, bitmap.PixelFormat);
+
+				int width = bitmapData.Width;
+				int height = bitmapData.Height;
 
 				byte[] array = GetArray(brightness);
 
 				result = new Bitmap(width, height, bitmap.PixelFormat);
-				bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
 				resultData = result.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, bitmap.PixelFormat);
 
 				int strideS = bitmapData.Stride;
@@ -1034,12 +954,12 @@ namespace ImageProcessing
 
 					if (bitmap.PixelFormat == PixelFormat.Format32bppArgb || bitmap.PixelFormat == PixelFormat.Format32bppPArgb || bitmap.PixelFormat == PixelFormat.Format32bppRgb)
 					{
-						for (y = height - 1; y >= 0; y--)
+						for (y = 0; y < height; y++)
 						{
 							pCurrentS = pSource + (y * strideS);
 							pCurrentR = pResult + (y * strideR);
 
-							for (x = width - 1; x >= 0; x--)
+							for (x = 0; x < width; x++)
 							{
 								pCurrentR[x * 4] = array[pCurrentS[x * 4]];
 								pCurrentR[x * 4 + 1] = array[pCurrentS[x * 4 + 1]];
@@ -1048,14 +968,29 @@ namespace ImageProcessing
 							}
 						}
 					}
-					else
+					else if (bitmap.PixelFormat == PixelFormat.Format24bppRgb)
 					{
-						for (y = height - 1; y >= 0; y--)
+						for (y = 0; y < height; y++)
 						{
 							pCurrentS = pSource + (y * strideS);
 							pCurrentR = pResult + (y * strideR);
 
-							for (x = stride - 1; x >= 0; x--)
+							for (x = 0; x < width; x++)
+							{
+								pCurrentR[x * 3] = array[pCurrentS[x * 3]];
+								pCurrentR[x * 3 + 1] = array[pCurrentS[x * 3 + 1]];
+								pCurrentR[x * 3 + 2] = array[pCurrentS[x * 3 + 2]];
+							}
+						}
+					}
+					else
+					{
+						for (y = 0; y < height; y++)
+						{
+							pCurrentS = pSource + (y * strideS);
+							pCurrentR = pResult + (y * strideR);
+
+							for (x = 0; x < width; x++)
 								pCurrentR[x] = array[pCurrentS[x]];
 						}
 					}

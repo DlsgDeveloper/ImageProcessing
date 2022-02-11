@@ -23,11 +23,21 @@ namespace TestApp
 					using (Bitmap b = new Bitmap(sourceFiles[i].FullName))
 					{
 						DateTime start = DateTime.Now;
-						Bitmap result = ImageProcessing.Contrast.GetBitmapV2(b, 1);
+
+						ImageProcessing.Contrast.Go(b, new Rectangle(100, 100, b.Width / 2 - 200, b.Height - 200), 0.5);
+						ImageProcessing.Contrast.Go(b, new Rectangle(b.Width / 2 + 100, 100, b.Width / 2 - 200, b.Height - 200), 0.8);
+
+						Console.WriteLine("Contrast.GetBitmap(): " + DateTime.Now.Subtract(start).ToString());
+
+						b.Save(Path.Combine(resultDir.FullName, Path.GetFileNameWithoutExtension(sourceFiles[i].Name) + ".png"), ImageFormat.Png);
+
+						/*
+						Bitmap result = ImageProcessing.Contrast.GetBitmap(b, new Rectangle(100, 100, b.Width / 2 - 200, b.Height - 200), 0.5);
 
 						Console.WriteLine("Contrast.GetBitmap(): " + DateTime.Now.Subtract(start).ToString());
 
 						result.Save(Path.Combine(resultDir.FullName, Path.GetFileNameWithoutExtension(sourceFiles[i].Name) + ".png"), ImageFormat.Png);
+						*/
 					}
 				}
 			}
