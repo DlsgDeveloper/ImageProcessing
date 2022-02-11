@@ -22,10 +22,10 @@ namespace TestApp
 				{
 					using (Bitmap b = new Bitmap(sourceFiles[i].FullName))
 					{
-						for (float factor = 0.5F; factor < 3.0F; factor = factor + 0.5F)
+						for (float factor = 0.5F; factor < 2.0F; factor = factor + 0.5F)
 						{
 							DateTime start = DateTime.Now;
-							using (Bitmap result = ImageProcessing.UnsharpMask.UnsharpGaussian5x5(b, factor))
+							using (Bitmap result = ImageProcessing.UnsharpMask.UnsharpMean3x3(b, factor))
 							{
 								Console.WriteLine("SharpeningTest.Go(): " + DateTime.Now.Subtract(start).ToString());
 

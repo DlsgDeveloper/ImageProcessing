@@ -23,9 +23,13 @@ namespace ImageProcessing
 		public static Bitmap UnsharpGaussian3x3(Bitmap sourceBitmap, float factor = 1.0f)
 		{
 			Bitmap resultBitmap;
-			
+
 			using (Bitmap blurBitmap = GetConvolutionFilter(sourceBitmap, UnsharpMaskMatrix.Gaussian3x3, 1.0 / 16.0))
 			{
+#if DEBUG
+				blurBitmap.Save(@"C:\Users\Jirka.Stybnar.IA-CORP\testRun\Sharpening\Gaussian3x3.png", ImageFormat.Png);
+#endif
+
 				resultBitmap = SubtractAddFactorImage(sourceBitmap, blurBitmap, factor);
 			}
 
@@ -48,6 +52,9 @@ namespace ImageProcessing
 
 			using (Bitmap blurBitmap = GetConvolutionFilter(sourceBitmap, UnsharpMaskMatrix.Gaussian5x5Type1, 1.0 / 159.0))
 			{
+#if DEBUG
+				blurBitmap.Save(@"C:\Users\Jirka.Stybnar.IA-CORP\testRun\Sharpening\Gaussian5x5Type1.png", ImageFormat.Png);
+#endif
 				resultBitmap = SubtractAddFactorImage(sourceBitmap, blurBitmap, factor);
 			}
 
@@ -64,7 +71,7 @@ namespace ImageProcessing
 			DateTime start = DateTime.Now;
 #endif
 
-			Bitmap resultBitmap = GetConvolutionFilterUnsharpMean3x3(sourceBitmap, factor);
+			Bitmap resultBitmap = GetConvolutionFilterUnsharpMean3x3(sourceBitmap, factor, 0);
 
 			resultBitmap.SetResolution(sourceBitmap.HorizontalResolution, sourceBitmap.VerticalResolution);
 
@@ -121,9 +128,9 @@ namespace ImageProcessing
 		#region GetConvolutionFilterUnsharpMean3x3()
 		private static unsafe Bitmap GetConvolutionFilterUnsharpMean3x3(Bitmap sourceBitmap, double factor = 1, int bias = 0)
 		{
-			BitmapData	sourceData = null;
-			Bitmap		resultBitmap = null;
-			BitmapData	resultData = null;
+			BitmapData sourceData = null;
+			Bitmap resultBitmap = null;
+			BitmapData resultData = null;
 
 			try
 			{
@@ -155,15 +162,15 @@ namespace ImageProcessing
 					for (y = 1; y < heightMinus1; y++)
 					{
 						byte* pS = scan0Source + strideS * y;
-						
+
 						for (x = 1; x < widthMinus1; x++)
 						{
 							byteOffset = y * strideS + x * 3;
 							Xx3 = x * 3;
 
-							blue =	(double)(pS[-strideS + Xx3 - 3] + pS[-strideS + Xx3]     + pS[-strideS + Xx3 + 3] + pS[Xx3 - 3] + pS[Xx3]	  + pS[Xx3 + 3] + pS[strideS + Xx3 - 3] + pS[strideS + Xx3]     + pS[strideS + Xx3 + 3]);
+							blue = (double)(pS[-strideS + Xx3 - 3] + pS[-strideS + Xx3] + pS[-strideS + Xx3 + 3] + pS[Xx3 - 3] + pS[Xx3] + pS[Xx3 + 3] + pS[strideS + Xx3 - 3] + pS[strideS + Xx3] + pS[strideS + Xx3 + 3]);
 							green = (double)(pS[-strideS + Xx3 - 2] + pS[-strideS + Xx3 + 1] + pS[-strideS + Xx3 + 4] + pS[Xx3 - 2] + pS[Xx3 + 1] + pS[Xx3 + 4] + pS[strideS + Xx3 - 2] + pS[strideS + Xx3 + 1] + pS[strideS + Xx3 + 4]);
-							red =	(double)(pS[-strideS + Xx3 - 1] + pS[-strideS + Xx3 + 2] + pS[-strideS + Xx3 + 5] + pS[Xx3 - 1] + pS[Xx3 + 2] + pS[Xx3 + 5] + pS[strideS + Xx3 - 1] + pS[strideS + Xx3 + 2] + pS[strideS + Xx3 + 5]);
+							red = (double)(pS[-strideS + Xx3 - 1] + pS[-strideS + Xx3 + 2] + pS[-strideS + Xx3 + 5] + pS[Xx3 - 1] + pS[Xx3 + 2] + pS[Xx3 + 5] + pS[strideS + Xx3 - 1] + pS[strideS + Xx3 + 2] + pS[strideS + Xx3 + 5]);
 
 							blue = divider * blue + bias;
 							green = divider * green + bias;
@@ -208,15 +215,15 @@ namespace ImageProcessing
 		#region GetConvolutionFilter()
 		private static unsafe Bitmap GetConvolutionFilter(Bitmap sourceBitmap, double[,] filterMatrix, double factor = 1, int bias = 0, bool grayscale = false)
 		{
-			BitmapData	sourceData = null;
-			Bitmap		resultBitmap = null;
-			BitmapData	resultData = null;
+			BitmapData sourceData = null;
+			Bitmap resultBitmap = null;
+			BitmapData resultData = null;
 
 			try
 			{
 				int width = sourceBitmap.Width;
 				int height = sourceBitmap.Height;
-				
+
 				sourceData = sourceBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 				resultBitmap = new Bitmap(width, height, sourceData.PixelFormat);
 				resultData = resultBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
@@ -236,7 +243,7 @@ namespace ImageProcessing
 				byte* scan0Result = (byte*)resultData.Scan0.ToPointer();
 
 				int strideS = sourceData.Stride;
-			
+
 				for (y = filterOffset; y < sourceBitmap.Height - filterOffset; y++)
 				{
 					for (x = filterOffset; x < sourceBitmap.Width - filterOffset; x++)
@@ -280,13 +287,13 @@ namespace ImageProcessing
 			return resultBitmap;
 		}
 		#endregion
-	
+
 		#region SubtractAddFactorImage()
 		private static Bitmap SubtractAddFactorImage(this Bitmap subtractFrom, Bitmap subtractValue, float factor = 1.0f)
 		{
 			BitmapData sourceData = subtractFrom.LockBits(new Rectangle(0, 0, subtractFrom.Width, subtractFrom.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-			
-			
+
+
 			byte[] sourceBuffer = new byte[sourceData.Stride * sourceData.Height];
 
 			Marshal.Copy(sourceData.Scan0, sourceBuffer, 0, sourceBuffer.Length);

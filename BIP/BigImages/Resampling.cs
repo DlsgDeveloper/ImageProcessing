@@ -1,12 +1,8 @@
+using ImageProcessing.Languages;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Reflection;
-using System.Diagnostics;
 using System.IO;
-using ImageProcessing.Languages;
 
 namespace ImageProcessing.BigImages
 {
@@ -20,6 +16,7 @@ namespace ImageProcessing.BigImages
 		{
 		}
 		#endregion
+
 
 		//PUBLIC METHODS
 		#region public methods
@@ -127,6 +124,7 @@ namespace ImageProcessing.BigImages
 		#endregion
 
 		#endregion
+
 
 		//PRIVATE METHODS
 		#region private methods

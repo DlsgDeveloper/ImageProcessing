@@ -6,11 +6,11 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Image Access, Inc.")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("2003 - 2021 DLSG at Image Access, Inc.")]
+[assembly: AssemblyCopyright("2003 - 2022 DLSG at Image Access, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
-[assembly: AssemblyVersion("3.8.14.1")]
+[assembly: AssemblyVersion("3.8.14.2")]
 
 [assembly: AssemblyDelaySign(false)]
 //[assembly: AssemblyKeyFile("C:\\Documents and Settings\\Jirka\\My Documents\\prog\\ImageProcessing\\ImageProcessing\\ImageProcessing.BigImages.snk")]
