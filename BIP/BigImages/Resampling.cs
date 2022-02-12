@@ -25,11 +25,11 @@ namespace ImageProcessing.BigImages
 		public void Resample(ImageProcessing.BigImages.ItDecoder itDecoder, string destPath, ImageProcessing.FileFormat.IImageFormat imageFormat,
 			ImageProcessing.PixelsFormat pixelFormat)
 		{			
-			Resample(itDecoder, destPath, imageFormat, pixelFormat, 0, 0, new ColorD(127,127,127));
+			Resample(itDecoder, destPath, imageFormat, pixelFormat, 0, 0);
 		}
 
 		public void Resample(ImageProcessing.BigImages.ItDecoder itDecoder, string destPath, ImageProcessing.FileFormat.IImageFormat imageFormat,
-			ImageProcessing.PixelsFormat pixelsFormat, double brightnessDelta, double contrastDelta, ColorD histogramMean)
+			ImageProcessing.PixelsFormat pixelsFormat, double brightnessDelta, double contrastDelta)
 		{
 			if ((pixelsFormat == PixelsFormat.FormatBlackWhite) && (imageFormat is ImageProcessing.FileFormat.Jpeg))
 				throw new Exception(BIPStrings.CanTCreate1BitPixelJPEGFile_STR);
@@ -70,11 +70,11 @@ namespace ImageProcessing.BigImages
 						if (itDecoder.PixelsFormat != PixelsFormat.FormatBlackWhite)
 						{
 							if (brightnessDelta != 0 && contrastDelta != 0)
-								ImageProcessing.BrightnessContrast.Go(resampled, brightnessDelta, contrastDelta, histogramMean);
+								ImageProcessing.BrightnessContrast.Go(resampled, brightnessDelta, contrastDelta);
 							else if (brightnessDelta != 0)
 								ImageProcessing.Brightness.Go(resampled, brightnessDelta);
 							else if (contrastDelta != 0)
-								ImageProcessing.Contrast.Go(resampled, contrastDelta, histogramMean);
+								ImageProcessing.Contrast.Go(resampled, contrastDelta);
 						}
 
 						unsafe

@@ -23,20 +23,20 @@ namespace ImageProcessing.BigImages
 		#region public methods
 
 		#region ResizeAndResample()
-		public void ResizeAndResample(string source, string destPath, ImageProcessing.FileFormat.IImageFormat imageFormat, ImageProcessing.PixelsFormat pixelsFormat, double zoom, double brightnessDelta, double contrastDelta, ImageProcessing.ColorD histogramMean)
+		public void ResizeAndResample(string source, string destPath, ImageProcessing.FileFormat.IImageFormat imageFormat, ImageProcessing.PixelsFormat pixelsFormat, double zoom, double brightnessDelta, double contrastDelta)
 		{
 			using (ImageProcessing.BigImages.ItDecoder itDecoder = new ItDecoder(source))
 			{
-				ResizeAndResample(itDecoder, destPath, imageFormat, pixelsFormat, zoom, brightnessDelta, contrastDelta, histogramMean);
+				ResizeAndResample(itDecoder, destPath, imageFormat, pixelsFormat, zoom, brightnessDelta, contrastDelta);
 			}
 		}
 
 		public void ResizeAndResample(ImageProcessing.BigImages.ItDecoder itDecoder, string destPath, ImageProcessing.FileFormat.IImageFormat imageFormat, ImageProcessing.PixelsFormat pixelsFormat, double zoom)
 		{
-			ResizeAndResample(itDecoder, destPath, imageFormat, pixelsFormat, zoom, 0, 0, new ColorD(127, 127, 127));
+			ResizeAndResample(itDecoder, destPath, imageFormat, pixelsFormat, zoom, 0, 0);
 		}
 
-		public void ResizeAndResample(ImageProcessing.BigImages.ItDecoder itDecoder, string destPath, ImageProcessing.FileFormat.IImageFormat imageFormat, ImageProcessing.PixelsFormat pixelsFormat, double zoom, double brightnessDelta, double contrastDelta, ColorD histogramMean)
+		public void ResizeAndResample(ImageProcessing.BigImages.ItDecoder itDecoder, string destPath, ImageProcessing.FileFormat.IImageFormat imageFormat, ImageProcessing.PixelsFormat pixelsFormat, double zoom, double brightnessDelta, double contrastDelta)
 		{
 			if ((pixelsFormat == PixelsFormat.FormatBlackWhite) && (imageFormat is ImageProcessing.FileFormat.Jpeg))
 				throw new Exception(BIPStrings.CanTCreate1BitPixelJPEGFile_STR);
@@ -98,11 +98,11 @@ namespace ImageProcessing.BigImages
 						if (itDecoder.PixelsFormat != PixelsFormat.FormatBlackWhite)
 						{
 							if (brightnessDelta != 0 && contrastDelta != 0)
-								ImageProcessing.BrightnessContrast.Go(resampled, brightnessDelta, contrastDelta, histogramMean);
+								ImageProcessing.BrightnessContrast.Go(resampled, brightnessDelta, contrastDelta);
 							else if (brightnessDelta != 0)
 								ImageProcessing.Brightness.Go(resampled, brightnessDelta);
 							else if (contrastDelta != 0)
-								ImageProcessing.Contrast.Go(resampled, contrastDelta, histogramMean);
+								ImageProcessing.Contrast.Go(resampled, contrastDelta);
 						}
 
 						unsafe

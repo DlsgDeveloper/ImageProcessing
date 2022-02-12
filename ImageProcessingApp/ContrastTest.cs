@@ -44,23 +44,6 @@ namespace TestApp
 		}
 		#endregion
 
-		#region ChangeContrast()
-		private static void ChangeContrast()
-		{
-			Bitmap bitmap = new Bitmap(@"C:\Users\jirka.stybnar\TestRun\BrightnessContrast\127.jpg");
-			DateTime start = DateTime.Now;
-
-			ImageProcessing.Histogram histogram = new Histogram(bitmap);
-			ImageProcessing.Contrast.Go(bitmap, 0.5, histogram.Mean);
-			//Bitmap result = ImageProcessing.Contrast.GetBitmap(bitmap, -0.5, histogram.Mean);
-
-			Console.WriteLine("Total time: " + DateTime.Now.Subtract(start).ToString());
-
-			bitmap.Save(@"C:\Users\jirka.stybnar\TestRun\BrightnessContrast\result.png", ImageFormat.Png);
-			bitmap.Dispose();
-		}
-		#endregion
-
 		#region ChangeContrastBigImage()
 		private static void ChangeContrastBigImage()
 		{
@@ -77,7 +60,7 @@ namespace TestApp
 			using (ImageProcessing.BigImages.ItDecoder itDecoder = new ImageProcessing.BigImages.ItDecoder(source))
 			{
 				histogram.Compute(itDecoder);
-				contrast.ChangeContrast(itDecoder, dest, new ImageProcessing.FileFormat.Jpeg(80), -0.5, histogram.Mean);
+				contrast.ChangeContrast(itDecoder, dest, new ImageProcessing.FileFormat.Jpeg(80), -0.5);
 			}
 		}
 		#endregion

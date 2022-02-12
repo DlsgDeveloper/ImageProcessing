@@ -81,7 +81,7 @@ namespace TestApp
 			ImageProcessing.BigImages.ResizingAndResampling resizing = new ImageProcessing.BigImages.ResizingAndResampling();
 
 			resizing.ProgressChanged += new ImageProcessing.ProgressHnd(ProgressChanged);
-			resizing.ResizeAndResample(itDecoder, dest, new ImageProcessing.FileFormat.Jpeg(80), PixelsFormat.Format8bppGray, 0.2, 0.2, 0.8, new ColorD(150, 150, 150));
+			resizing.ResizeAndResample(itDecoder, dest, new ImageProcessing.FileFormat.Jpeg(80), PixelsFormat.Format8bppGray, 0.2, 0.2, 0.8);
 		}
 		#endregion
 
@@ -100,7 +100,7 @@ namespace TestApp
 					//resizing.ResizeAndResample(itDecoder, @"C:\delete\kic\jpg\" + file.Name, new ImageProcessing.FileFormat.Jpeg(80), PixelsFormat.Format8bppGray, 1.0 / 3.0, 0, 0, new ColorD(150, 150, 150));
 					//resizing.ResizeAndResample(itDecoder, @"C:\delete\kic\png\" + file.Name, new ImageProcessing.FileFormat.Png(), PixelsFormat.Format8bppGray, 1.0 / 3.0, 0, 0, new ColorD(150, 150, 150));
 					//resizing.ResizeAndResample(itDecoder, @"C:\delete\kic\tif\" + file.Name, new ImageProcessing.FileFormat.Tiff(ImageProcessing.IpSettings.ItImage.TiffCompression.LZW), PixelsFormat.Format8bppGray, 1.0 / 3.0, 0, 0, new ColorD(150, 150, 150));
-					resizing.ResizeAndResample(itDecoder, @"C:\delete\kic\none\" + file.Name, new ImageProcessing.FileFormat.Tiff(ImageProcessing.IpSettings.ItImage.TiffCompression.None), PixelsFormat.Format8bppGray, 1.0 / 3.0, 0, 0, new ColorD(150, 150, 150));
+					resizing.ResizeAndResample(itDecoder, @"C:\delete\kic\none\" + file.Name, new ImageProcessing.FileFormat.Tiff(ImageProcessing.IpSettings.ItImage.TiffCompression.None), PixelsFormat.Format8bppGray, 1.0 / 3.0, 0, 0);
 				}
 			}
 		}
