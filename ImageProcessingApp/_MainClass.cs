@@ -68,8 +68,7 @@ namespace TestApp
 			
 			try
 			{
-				TestApp.BrightnessContrastTest.Go();
-				//TestApp.PixelsComparer.Go();
+				TestApp.InsertorTest.Go();
 			}
 			catch (Exception ex)
 			{

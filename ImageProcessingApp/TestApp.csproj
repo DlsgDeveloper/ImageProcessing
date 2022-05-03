@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoLevelsTest.cs" />
+    <Compile Include="InsertorTest.cs" />
     <Compile Include="SharpeningTest.cs" />
     <Compile Include="BitmapOperations\BitmapFiller.cs" />
     <Compile Include="BitmapOperations\Exposure.cs" />
