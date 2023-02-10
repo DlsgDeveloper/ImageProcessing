@@ -68,7 +68,8 @@ namespace TestApp
 			
 			try
 			{
-				TestApp.InsertorTest.Go();
+				//TestApp.InsertorTest.Go();
+				TestApp.ContentLocatorTest.Go();
 			}
 			catch (Exception ex)
 			{
@@ -337,149 +338,6 @@ namespace TestApp
 
 			Console.WriteLine(string.Format("CompareImages: {0}, Different points count: {1}", DateTime.Now.Subtract(start).ToString(), differentPoints.Count));
 			Console.ReadLine();
-		}
-		#endregion
-
-		#region ContentLocator()
-		private static void ContentLocator()
-		{
-			string destinationDir = @"C:\delete\";
-			string source = @"C:\delete\00000009.tif";
-
-			DateTime start = DateTime.Now;
-			float confidence;
-
-			Directory.CreateDirectory(destinationDir);
-
-			ItImage itImage = new ItImage(new FileInfo(source), ItImage.ScannerType.Bookeye2);
-			itImage.IsFixed = false;
-
-			confidence = itImage.Find(new Operations(true, 0.2F, true, false, false));
-			Console.WriteLine("Total Time: " + DateTime.Now.Subtract(start).ToString());
-
-			itImage.ReleasePageObjects();
-			GC.Collect();
-
-			Bitmap r1 = itImage.GetResult(0);
-			r1.Save(destinationDir + @"\88 Result1.png", ImageFormat.Png);
-			r1.Dispose();
-
-			if (itImage.TwoPages)
-			{
-				Bitmap r2 = itImage.GetResult(1);
-				r2.Save(destinationDir + @"\88 Result2.png", ImageFormat.Png);
-				r2.Dispose();
-			}
-
-			itImage.Dispose();
-		}
-		#endregion
-
-		#region ContentLocatorBigImage()
-		private static void ContentLocatorBigImage()
-		{
-			string source = @"C:\delete\00000009.tif";
-			string destL = @"C:\delete\resultL.png";
-			string destR = @"C:\delete\resultR.png";
-
-			ImageProcessing.IpSettings.ItImage itImage = new ImageProcessing.IpSettings.ItImage(new FileInfo(source));
-			itImage.ExecutionProgressChanged += new ProgressHnd(ProgressChanged);
-			itImage.IsFixed = false;
-			itImage.IsIndependent = true;
-
-			itImage.Find(source, new Operations(new Operations.ContentLocationParams(true, 0.1F, 0.1F, false), false, false, false));
-
-			itImage.Execute(source, 0, destL, new ImageProcessing.FileFormat.Png());
-
-			if (itImage.TwoPages)
-				itImage.Execute(source, 1, destR, new ImageProcessing.FileFormat.Png());
-
-			itImage.Dispose();
-		}
-		#endregion
-	
-		#region ContentLocatorDir()
-		private unsafe static void ContentLocatorDir()
-		{
-			DirectoryInfo sourceDir = new DirectoryInfo(@"C:\delete\it");
-			DirectoryInfo destDir = new DirectoryInfo(@"C:\delete\it\results");
-			ArrayList sources = new ArrayList();
-			System.Drawing.Color color = System.Drawing.Color.FromArgb(90, 90, 90);
-			TimeSpan span = new TimeSpan(0);
-			DateTime totalTimeStart = DateTime.Now;
-			float confidence = 0;
-
-			sources.AddRange(sourceDir.GetFiles("*.tif"));
-			sources.AddRange(sourceDir.GetFiles("*.jpg"));
-			sources.AddRange(sourceDir.GetFiles("*.png"));
-			sources.AddRange(sourceDir.GetFiles("*.bmp"));
-			sources.AddRange(sourceDir.GetFiles("*.gif"));
-			
-			destDir.Create();
-
-			ItImages itImages = new ItImages();
-
-			foreach (FileInfo file in sources)
-			{
-				ItImage itImage = new ItImage(file, ItImage.ScannerType.Bookeye2);
-				itImage.IsFixed = false;
-				itImage.IsIndependent = false;
-
-				itImages.Add(itImage);
-			}
-
-			//itImages[0].IsFixed = true;
-
-			foreach (ItImage itImage in itImages)
-			{
-				DateTime start = DateTime.Now;
-
-				confidence = itImage.Find(new Operations(true, 0.2F, true, true, false));
-
-				TimeSpan time = DateTime.Now.Subtract(start);
-				Console.WriteLine(string.Format("{0}: {1}, Confidence:{2}%", itImage.File.Name, time.ToString(), confidence));
-
-				itImage.DisposeBitmap();
-				itImage.ReleasePageObjects();
-				GC.Collect();
-			}
-
-			//itImages.MakeClipsSameSize(0.2f);
-			
-			foreach (ItImage itImage in itImages)
-			{
-				Bitmap r1 = itImage.GetResult(0);
-				r1.Save(destDir + @"\" + Path.GetFileNameWithoutExtension(itImage.File.Name) + "_L.jpg", ImageFormat.Jpeg);
-				r1.Dispose();
-
-				if (itImage.TwoPages)
-				{
-					Bitmap r2 = itImage.GetResult(1);
-					r2.Save(destDir + @"\" + Path.GetFileNameWithoutExtension(itImage.File.Name) + "_R.jpg", ImageFormat.Jpeg);
-					r2.Dispose();
-				}
-
-				itImage.Dispose();
-			}
-
-			Console.WriteLine("Total time: " + span.ToString());
-			Console.WriteLine("Total all time: " + DateTime.Now.Subtract(totalTimeStart).ToString());
-		}
-		#endregion
-
-		#region ContentLocatorNew()
-		private static void ContentLocatorNew()
-		{
-			string source = @"C:\OpusFreeFlowWorkingData\00000\083\ScanImages\Reduced\00000083_000003.jpg";
-			//string source = @"C:\delete\scan_2009-12-22_18-20-49.jpg";				
-			DateTime start = DateTime.Now;
-
-			ImageProcessing.BigImages.ContentLocator contentLocator = new ImageProcessing.BigImages.ContentLocator();
-			ImageProcessing.BigImages.ItDecoder itDecoder = new ImageProcessing.BigImages.ItDecoder(source);
-
-			contentLocator.ProgressChanged += new ProgressHnd(ProgressChanged);
-
-			contentLocator.GetContent(itDecoder);
 		}
 		#endregion
 
